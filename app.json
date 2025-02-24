@@ -1,0 +1,81 @@
+{
+  "id": "ea9fcf9a-ae0a-4da9-8721-85f2040195aa",
+  "name": "TWC_SCM_Customization",
+  "publisher": "EY",
+  "version": "1.0.0.120",
+  "brief": "",
+  "description": "",
+  "target": "OnPrem",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": [
+{
+  "id":  "5ecfc871-5d82-43f1-9c54-59685e82318d",
+  "publisher":  "LS Retail",
+  "name":  "LS Central",
+  "version":  "22.2.0.1000616"
+},
+     
+{
+  "id":  "db643212-b7fb-4dd4-b5a8-cb44ac714461",
+  "publisher":  "Microsoft",
+  "name":  "India GST",
+  "version":  "22.2.56969.57617"
+},
+{
+  "id":  "2dc39818-e0f0-42b6-99eb-ba29dc5f4102",
+  "publisher":  "Microsoft",
+  "name":  "India Gate Entry",
+  "version":  "22.2.56969.57617"
+},
+{
+  "id":  "d3c551dd-5903-4194-b153-04ced9d29a2c",
+  "publisher":  "Microsoft",
+  "name":  "India Tax Base",
+  "version":  "22.2.56969.57617"
+},
+{
+  "id":  "eae5779e-7797-4c4c-977e-7516652b7a65",
+  "publisher":  "Microsoft",
+  "name":  "India TDS",
+  "version":  "22.2.56969.57617"
+},
+{
+  "id":  "eddcf82e-482c-49d1-836b-ad0284f2c5b0",
+  "publisher":  "Microsoft",
+  "name":  "India TCS",
+  "version":  "22.2.56969.57617"
+},
+     {
+      "id":  "437dbf0e-84ff-417a-965d-ed2bb9650972",
+      "publisher":  "Microsoft",
+      "name":  "Base Application",
+      "version":  "22.2.56969.57617"
+     },
+     {
+      "id":  "c1eafb3f-e397-468e-bdb4-ecc5c317ca00",
+      "publisher":  "Microsoft",
+      "name":  "Tax Engine",
+      "version":  "22.2.56969.57617"
+     },
+     {
+      "id":  "7106d701-c601-4a5f-97c2-b8b323ae2c18",
+      "publisher":  "Microsoft",
+      "name":  "QR Generator",
+      "version":  "22.2.56969.57617"
+     }
+  ],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "20.0.0.0",
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 51115
+    }
+  ],
+  "runtime": "11.0"
+}
