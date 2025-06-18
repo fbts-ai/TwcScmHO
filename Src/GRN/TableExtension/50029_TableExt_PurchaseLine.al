@@ -16,6 +16,13 @@ tableextension 50029 PurchaseLineExt extends "Purchase Line"
             Caption = 'FA Qty.';
 
         }
+        field(50116; "Document Date"; Date) //PT-FBTS 090425
+        {
+
+            FieldClass = FlowField;
+            CalcFormula = lookup("Purchase Header"."Document Date" where("No." = field("Document No.")));
+
+        }
         //AJ_Alle_25102023
         modify(Quantity)
         {

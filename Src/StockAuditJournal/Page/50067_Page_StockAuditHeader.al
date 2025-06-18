@@ -837,6 +837,50 @@ page 50067 StockAuditHeader
                     Report.RunModal(50009, true, false, stockHeader);
                 end;
             }
+            action("Update price")//PTFBTS_11/05/24
+            {
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedCategory = Process;
+                Caption = 'Update price';
+                Ellipsis = true;
+                Image = Report;
+                ToolTip = 'Start the process of counting inventory by filling the journal with known quantities.';
+                trigger OnAction()
+                var
+                    stockHeader: Record StockAuditHeader;
+                    stockLineRec: Record StockAuditLine;
+                    stockkeepingunit: Record "Stockkeeping Unit";
+                    UnitPrice: Decimal;
+                //vaiance: Report 60101;
+                begin
+                    Clear(UnitPrice);
+                    if Confirm('Do you want update unit cost') then
+                        stockLineRec.Reset();
+                    stockLineRec.SetRange("DocumentNo.", Rec."No.");
+                    stockLineRec.SetRange(UnitPrice, 0);
+                    if stockLineRec.FindSet() then begin
+
+                        repeat
+                            stockkeepingunit.Reset();
+                            stockkeepingunit.SetRange("Item No.", stockLineRec."Item Code");
+                            stockkeepingunit.SetRange("Location Code", stockLineRec."Location Code");
+                            //stockkeepingunit.CalcFields("Unit Cost");
+                            if stockkeepingunit.FindSet() then begin
+                                repeat
+                                    UnitPrice := stockkeepingunit."Unit Cost";
+                                // Message('%1', UnitPrice);
+                                until stockkeepingunit.Next() = 0;
+                            end;
+                            stockLineRec.UnitPrice := UnitPrice;
+                            stockLineRec.Modify();
+                        until stockLineRec.Next() = 0;
+
+
+                    end;
+                end;
+            }
         }
     }
     var

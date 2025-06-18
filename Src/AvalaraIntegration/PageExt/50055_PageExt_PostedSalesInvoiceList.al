@@ -7,7 +7,11 @@ pageextension 50055 PostedSalesInvoiceListExt extends "Posted Sales invoices"
         {
             field("IRN Hash"; Rec."IRN Hash")
             {
-
+                ApplicationArea = all;
+            }
+            field("E-Way Bill No."; Rec."E-Way Bill No.")
+            {
+                ApplicationArea = all;
             }
             field("QR Code"; Rec."QR Code")
             {
@@ -20,7 +24,6 @@ pageextension 50055 PostedSalesInvoiceListExt extends "Posted Sales invoices"
     {
         // Add changes to page actions here
     }
-
     var
         myInt: Integer;
 }

@@ -10,6 +10,18 @@ pageextension 50029 SCMPurchLineExt extends "Purchase Lines"
                 caption = 'Remarks';
             }
         }
+        addafter("Document No.") //PT-FBTS 090425
+        {
+            field("Document Date"; Rec."Document Date")
+            {
+                ApplicationArea = all;
+            }
+            field(CreatedDateTime; Rec.SystemCreatedAt)
+            {
+                ApplicationArea = all;
+            }
+            //PT-FBTS 090425
+        }
     }
 
     actions

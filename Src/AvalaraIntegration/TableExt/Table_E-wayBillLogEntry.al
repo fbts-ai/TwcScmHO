@@ -7,7 +7,7 @@ table 50069 "E-Waybill Log Entry"
     {
         field(1; "Entry No."; Integer)
         {
-            //AutoIncrement = true;
+            AutoIncrement = true;
             Editable = false;
         }
         field(2; "Request Type"; Option)

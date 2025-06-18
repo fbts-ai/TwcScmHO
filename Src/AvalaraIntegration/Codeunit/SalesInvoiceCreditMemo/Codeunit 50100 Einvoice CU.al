@@ -1293,7 +1293,7 @@ codeunit 50107 "Einvoice CU"
         TransferLine.SETRANGE("Document No.", TransferHeader."No.");
         //  TransferLine.SETRANGE("Transfer-from Code", TransferHeader."Transfer-from Code");
         TransferLine.SetFilter("HSN/SAC Code", '<>%1', '00000000');
-        //  TransferLine.SetFilter("Unit Price", '<>%1', 0);
+        TransferLine.SetFilter(Quantity, '<>%1', 0);
         IF TransferLine.FINDSET THEN
             REPEAT
                 IF UnitofMeasure.GET(TransferLine."Unit of Measure Code") THEN;

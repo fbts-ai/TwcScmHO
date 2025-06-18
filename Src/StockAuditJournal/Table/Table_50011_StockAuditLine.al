@@ -75,7 +75,7 @@ table 50011 StockAuditLine
                 StockkeepingUnitPrice.Reset(); //PT-FBTS 09-08-24
                 StockkeepingUnitPrice.SetRange("Location Code", TempstockAuditHead."Location Code");
                 StockkeepingUnitPrice.SetRange("Item No.", Rec."Item Code");
-                // StockkeepingUnitPrice.SetFilter("Unit Cost", '<>%1', 0);//PT-FBTS-12-12-24
+                StockkeepingUnitPrice.SetFilter("Unit Cost", '<>%1', 0);//PT-FBTS-12-12-24
                 if StockkeepingUnitPrice.FindFirst() then begin
                     UnitPrice := StockkeepingUnitPrice."Unit Cost"; //PT-FBTS 09-08-24
                 end

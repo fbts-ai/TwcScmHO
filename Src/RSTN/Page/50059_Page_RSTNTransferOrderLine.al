@@ -27,9 +27,18 @@ page 50059 "RSTN Transfer Order Subform"
                         TempItem: Record "Item";
                         TempTransferReceiptLine1: Record "Transfer Receipt Line";
                         TempTransferHeader1: Record "Transfer Header";
+                        TranferLineRec: Record "Transfer Line";
 
                     begin
                         UpdateForm(true);
+
+                        TranferLineRec.Reset(); //PT-FBTS-14052025 start
+                        TranferLineRec.SetRange("Document No.", Rec."Document No.");
+                        TranferLineRec.SetFilter("Line No.", '<>%1', Rec."Line No.");
+                        TranferLineRec.SetFilter("Item No.", rec."Item No.");
+                        if TranferLineRec.FindSet() then begin
+                            Error('Item already Exist in Item No:%1', Rec."Item No.");
+                        end; //PT-FBTS-14052025
 
                         // TempTransferHeader1.Reset(); //OLDCode -PT-FBTS
                         // TempTransferHeader1.SetRange("No.", Rec."Document No.");
@@ -165,9 +174,9 @@ page 50059 "RSTN Transfer Order Subform"
                     var
                         TempTransferReceiptLine1: Record "Transfer Receipt Line";
                         TempTransferHeader1: Record "Transfer Header";
-                        ItemLedEntry: Record "Item Ledger Entry";//PT-FBTS
+                        ItemLedEntry: Record "Item Ledger Entry";
+                        TranferLineRec: Record "Transfer Line";
                     begin
-
                         TempTransferHeader1.Reset();
                         TempTransferHeader1.SetRange("No.", Rec."Document No.");
                         IF TempTransferHeader1.FindFirst() then;
@@ -177,14 +186,15 @@ page 50059 "RSTN Transfer Order Subform"
                         TempTransferReceiptLine1.SetFilter("Item No.", '=%1', Rec."Item No.");
                         IF TempTransferReceiptLine1.FindFirst() Then begin
                             //IF Rec.Quantity > TempTransferReceiptLine1.Quantity then OLD Code
-                            IF Rec."Quantity (Base)" > TempTransferReceiptLine1."Quantity (Base)" then  //NewCode PT-FBTS 
+                            IF Rec."Quantity (Base)" > TempTransferReceiptLine1."Quantity (Base)" then  //NewCode PT-Fbts
                                 Error('Quantity enter on RSTN line must be equal or less than Transfer receipt qty')
                         end;
                         ItemLedEntry.Reset(); //PT-FBTS
                         ItemLedEntry.SetRange("Document No.", TempTransferHeader1.TransferOrderReferenceNo);
                         ItemLedEntry.SetFilter("Item No.", '=%1', Rec."Item No.");
                         ItemLedEntry.SetRange(Positive, true);
-                        if ItemLedEntry.FindFirst() then begin
+                        if ItemLedEntry.FindFirst() then begin  //PT-FBTS-14052025 start changes  
+                            ItemLedEntry.CalcSums("Remaining Quantity");
                             if Rec."Quantity (Base)" > ItemLedEntry."Remaining Quantity" then
                                 Error('Quantity enter RSTN must be equal or less than Remaining Quantity.');
                         end;

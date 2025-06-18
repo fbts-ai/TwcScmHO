@@ -21,7 +21,23 @@ pageextension 50052 PostedTransfershipmentListext extends "Posted Transfer Shipm
             {
                 ApplicationArea = all;
             }
+            field("IRN Hash"; Rec."IRN Hash")
+            {
+                ApplicationArea = all;
+            }
+            field("E-Way Bill No."; Rec."E-Way Bill No.")
+            {
+                ApplicationArea = all;
+            }
         }
+        addafter("Posting Date")///PT-FBTS
+        {
+            field(SystemCreatedAt; SystemCreatedAt)
+            {
+                ApplicationArea = all;
+            }
+        }
+
         addafter("Transfer-from Code")//PT-FBTS 21052024
         {
             field("Transfer-from Name"; Rec."Transfer-from Name")
