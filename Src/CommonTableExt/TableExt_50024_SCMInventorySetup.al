@@ -76,6 +76,11 @@ tableextension 50024 SCMInventorySetupExt extends "Inventory Setup"
             Caption = 'Fixed asset Transfer Batch Name';
             //  TableRelation = "Item Journal Batch";
         }
+        field(50120; "Cost Adjustment Logging"; Enum "Cost Adjustment Logging Level")
+        {
+            Caption = 'Cost Adjustment Logging';
+            DataClassification = CustomerContent;
+        }
         field(50109; OfflineSalesBatchName; Code[10])
         {
             Caption = 'Offline Sales Process';
@@ -142,6 +147,14 @@ tableextension 50024 SCMInventorySetupExt extends "Inventory Setup"
             Caption = 'Custom Bom Nos.';
             TableRelation = "No. Series";
         }
+        field(50124; "Conslid.indent Nos."; Code[20])
+        {
+            Caption = 'Conslid.indent Nos.';
+            TableRelation = "No. Series";
+        }
+        field(50125; "Max Submission limit Special"; Integer)
+        { }
+
     }
 
     var

@@ -100,7 +100,7 @@ pageextension 50048 TransferOrderSubformExt extends "Transfer Order Subform"
                                             qtyCount := qtyCount + ILE1."Remaining Quantity";
                                         Until ILE1.Next() = 0;
                                     If qtyCount < TempTransferLine.Quantity then
-                                        Error('Qty avaliable in Lot and Qty enter online is less , please redure a qty available');
+                                        Error('Qty avaliable in Lot and Qty enter online is less, please redure a qty available');
                                     //Validation end
 
                                     //reservation entry creation
@@ -167,7 +167,7 @@ pageextension 50048 TransferOrderSubformExt extends "Transfer Order Subform"
                     SourceProdOrderLine: Integer;
                     SourceRefNo: Integer;
                     Usersetup: Record "User Setup";
-                    AllSCMCustomization:Codeunit AllSCMCustomization;
+                    AllSCMCustomization: Codeunit AllSCMCustomization;
                 begin
 
                     if Usersetup.Get(UserId) then
@@ -185,7 +185,7 @@ pageextension 50048 TransferOrderSubformExt extends "Transfer Order Subform"
                                         SourceProdOrderLine := transferline3."Line No.";
                                         SourceRefNo := transferline3."Derived From Line No.";
                                     end;
-                                   AllSCMCustomization."Assign Lot NO"(transferline2, SourceProdOrderLine, SourceRefNo);
+                                    AllSCMCustomization."Assign Lot NO"(transferline2, SourceProdOrderLine, SourceRefNo);
                                 until transferline2.next = 0;
                                 Message('Auto Lot no assigned sussessfully');
                             end;

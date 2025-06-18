@@ -1557,12 +1557,116 @@ codeunit 50035 "PurchaseCrMemoEwayBill"
     end;
 
 
+    //AFTERDELETE
+
+    [EventSubscriber(ObjectType::Table, dataBase::"Purchase Header", 'OnBeforeDeleteEvent', '', false, false)]
+    local procedure MyProcedure(var Rec: Record "Purchase Header"; RunTrigger: Boolean)
+    var
+        PurchaseInvLine: Record "Purchase Line";
+        PurchaseCheckLine: record "Purchase Line";
+        PurchaseHeader_lRec: Record "Purchase Header";
+        i: Integer;
+        PurchaseLine_lRec: Record "Purchase Line";
+        LineNo: Integer;
+        HeaderNo: Code[20];
+
+
+        entryNo: Integer;
+        LotNo: Code[20];
+        Itemtraking: Text[20];
+        LineNo1: Integer;
+        // TrackingSpecification:Record "Tracking Specification";
+        ItemLedger: Record "Item Ledger Entry";
+        ReservEntry1: Record "Reservation Entry";
+        ReservEntry: Record "Reservation Entry";
+        CheckCaseCondtion: Boolean;
+
+    begin
+        Clear(LineNo);
+        CheckCaseCondtion := false;
+        IF (Rec."Document Type" = Rec."Document Type"::Invoice) AND (Rec."Auto Invoice") then begin
+            PurchaseInvLine.Reset();
+            PurchaseInvLine.SetRange("Document No.", Rec."No.");
+            PurchaseInvLine.Setfilter("Receipt No.", '%1', '');
+            IF PurchaseInvLine.FindSet() then
+                repeat
+                    IF i = 0 then begin
+                        PurchaseHeader_lRec.Init();
+                        PurchaseHeader_lRec."Document Type" := PurchaseHeader_lRec."Document Type"::"Credit Memo";
+                        PurchaseHeader_lRec."No." := '';
+                        PurchaseHeader_lRec.Insert(true);
+
+                        PurchaseHeader_lRec."Vendor Invoice No." := Rec."Vendor Invoice No.";
+                        PurchaseHeader_lRec.Validate("Buy-from Vendor No.", Rec."Buy-from Vendor No.");
+                        PurchaseHeader_lRec.Validate("Location Code", Rec."Location Code");
+                        PurchaseHeader_lRec.Validate("Posting Date", Today);
+                        HeaderNo := PurchaseHeader_lRec."No.";
+                        PurchaseHeader_lRec.Modify();
+
+                    end;
+                    i += 1;
+
+                    PurchaseCheckLine.Reset();
+                    PurchaseCheckLine.SetRange("Document No.", HeaderNo);
+                    IF PurchaseCheckLine.FindLast() then
+                        LineNo := PurchaseCheckLine."Line No." + 10000
+                    Else
+                        LineNo := 10000;
+
+
+                    PurchaseLine_lRec.Init();
+                    PurchaseLine_lRec."Document Type" := PurchaseLine_lRec."Document Type"::"Credit Memo";
+                    PurchaseLine_lRec."Document No." := HeaderNo;
+                    PurchaseLine_lRec."Line No." := LineNo;
+                    PurchaseLine_lRec.Type := PurchaseInvLine.Type;
+                    PurchaseLine_lRec.Validate("No.", PurchaseInvLine."No.");
+                    PurchaseLine_lRec.Validate(Quantity, PurchaseInvLine.Quantity);
+                    PurchaseLine_lRec.Insert();
 
 
 
+                    Clear(entryNo);
+                    ReservEntry1.Reset();
+                    if ReservEntry1.FindLast() then
+                        entryNo := ReservEntry1."Entry No." + 1
+                    else
+                        entryNo := 1;
 
+                    ItemLedger.Reset();
+                    ItemLedger.SetRange("Document No.", PurchaseInvLine."Extra Receipt No.");
+                    ItemLedger.SetRange("Document Line No.", PurchaseInvLine."Extra Receipt Line No.");
+                    ItemLedger.SetRange("Item No.", PurchaseInvLine."No.");
+                    if ItemLedger.FindFirst() then
+                        IF ItemLedger."Lot No." <> '' then begin
+                            ReservEntry.Init();
+                            ReservEntry."Item No." := PurchaseLine_lRec."No.";
+                            ReservEntry."Source Subtype" := ReservEntry."Source Subtype"::"3";
+                            ReservEntry."Source ID" := PurchaseLine_lRec."Document No.";
+                            ReservEntry."Source Ref. No." := PurchaseLine_lRec."Line No.";
+                            ReservEntry."Location Code" := PurchaseLine_lRec."Location Code";
+                            ReservEntry.Quantity := -PurchaseLine_lRec."Quantity (Base)";
+                            ReservEntry."Created By" := UserId;
+                            ReservEntry."Source Type" := 39;
+                            ReservEntry."Item Tracking" := ReservEntry."Item Tracking"::"Lot No.";
 
-
-
-
+                            ReservEntry."Lot No." := ItemLedger."Lot No.";
+                            ReservEntry."Item Ledger Entry No." := ItemLedger."Entry No.";
+                            ReservEntry."Expected Receipt Date" := PurchaseLine_lRec."Expected Receipt Date";
+                            ReservEntry."Creation Date" := Today;
+                            ReservEntry."Reservation Status" := "Reservation Status"::Prospect;
+                            ReservEntry."Quantity Invoiced (Base)" := 0;
+                            ReservEntry.Validate("Quantity (Base)", -PurchaseLine_lRec."Quantity (Base)");
+                            // ReservEntry.Positive := (ReservEntry."Quantity (Base)" > 0);
+                            ReservEntry."Entry No." := entryNo;
+                            ReservEntry."Qty. per Unit of Measure" := PurchaseLine_lRec."Qty. per Unit of Measure";
+                            ReservEntry.Insert();
+                        end;
+                    CheckCaseCondtion := true;
+                Until PurchaseInvLine.Next() = 0;
+            IF CheckCaseCondtion then begin
+                //  CODEUNIT.Run(CODEUNIT::"Purch.-Post", PurchaseHeader_lRec);
+                Message('Credit Memo Created%1', HeaderNo);
+            end;
+        End;
+    End;
 }

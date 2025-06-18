@@ -1,4 +1,4 @@
-pageextension 50095 Gst extends "GST Group"
+pageextension 50095 GstExt extends "GST Group"
 {
     layout
     {
@@ -9,6 +9,10 @@ pageextension 50095 Gst extends "GST Group"
             {
                 ApplicationArea = all;
             }
+            // field(ForkLyft_GSt; Rec.ForkLyft_GSt)
+            // {
+            //     ApplicationArea = All;
+            // }
         }
     }
 

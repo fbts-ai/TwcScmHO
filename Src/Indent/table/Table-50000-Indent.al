@@ -40,16 +40,30 @@ table 50000 IndentHeader
                 if Rec.Type = Rec.Type::Item then begin
                     Clear(CalDate);
                     InvSetup.Get();
-                    CalDate := CalcDate(InvSetup."Indent Delivery date Cal", Today);
-                    IF xRec."Posting date" <> 0D then begin
-                        //   IF xRec."Posting date" >= Rec."Posting date" then
-                        //     Error('Delivery Date should not be less than current delivery date');
+                    IF Rec."Order Type" = Rec."Order Type"::Regular then begin
+                        CalDate := CalcDate(InvSetup."Indent Delivery date Cal", Today);
+                        IF xRec."Posting date" <> 0D then begin
+                            //   IF xRec."Posting date" >= Rec."Posting date" then
+                            //     Error('Delivery Date should not be less than current delivery date');
+                            IF Rec."Posting date" < Today then
+                                Error('Delivery Date should  be less than %1', Today);
 
-                        IF Rec."Posting date" < Today then
-                            Error('Delivery Date should  be less than %1', Today);
+                            IF Rec."Posting date" > CalDate then
+                                Error('Delivery Date should  be greater than %1', CalDate);
+                        end;
+                    end;
 
-                        IF Rec."Posting date" > CalDate then
-                            Error('Delivery Date should  be greater than %1', CalDate);
+                    IF Rec."Order Type" = Rec."Order Type"::Special then begin
+                        CalDate := CalcDate(InvSetup."Indent Delivery date Cal", Today - 1);
+                        IF xRec."Posting date" <> 0D then begin
+                            //   IF xRec."Posting date" >= Rec."Posting date" then
+                            //     Error('Delivery Date should not be less than current delivery date');
+                            IF Rec."Posting date" < Today then
+                                Error('Delivery Date should  be less than %1', Today);
+
+                            IF Rec."Posting date" > CalDate then
+                                Error('Delivery Date should  be greater than %1', CalDate);
+                        end;
                     end;
                 end;
             end;
@@ -203,6 +217,29 @@ table 50000 IndentHeader
             DataClassification = ToBeClassified;
             Caption = 'Approved/Reject';
 
+        }
+        field(50047; "Order Type"; Option) //PT-FBTS
+        {
+            OptionMembers = "Regular","Special";
+            OptionCaption = 'Regular,Next day delivery';
+            trigger OnValidate()
+            var
+                myInt: Integer;
+                Indentline: Record Indentline;
+            begin
+                Indentline.Reset();
+                Indentline.SetRange("DocumentNo.", Rec."No.");
+                IF Indentline.FindSet() then begin
+                    Error('You Can not changes');
+                end;
+                Invsetup.Get;
+                IF Rec."Order Type" = Rec."Order Type"::Regular then
+                    Rec."Posting date" := CalcDate(Invsetup."Indent Delivery date Cal", Today);
+
+                IF Rec."Order Type" = Rec."Order Type"::Special then
+                    Rec."Posting date" := CalcDate(Invsetup."Indent Delivery date Cal", Today - 1);
+                Validate("Posting date");
+            end;
         }
     }
 

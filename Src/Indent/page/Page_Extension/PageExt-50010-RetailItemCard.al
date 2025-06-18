@@ -20,6 +20,21 @@ pageextension 50010 LSCRetailItemCard extends "LSC Retail Item Card"
                 ApplicationArea = all;
             }
         }
+        addafter(Description)
+        {
+            field("BI Super Category"; Rec."BI Super Category") //PT-FBTS 11/06/2025
+            {
+                ApplicationArea = all;
+            }
+            field("BI Category Code"; Rec."BI Category Code")//PT-FBTS 11/06/2025
+            {
+                ApplicationArea = all;
+            }
+            field("Send to AP"; Rec."Send to AP")
+            {
+                ApplicationArea = all;
+            }
+        }
         modify(Pricing)
         {
             Visible = true;

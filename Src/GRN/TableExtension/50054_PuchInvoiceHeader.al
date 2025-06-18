@@ -28,6 +28,14 @@ tableextension 50054 PurchInvoiceHeader extends "Purch. Inv. Header"
             FieldClass = FlowField;
             CalcFormula = sum("Detailed GST Ledger Entry"."GST Amount" where("Document No." = field("No.")));
         }
+        field(50000; "Auto Invoice"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+            field(50015; "Vendor Bill No."; Code[20]) //PT-FBTS
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

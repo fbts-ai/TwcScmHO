@@ -119,6 +119,25 @@ tableextension 50021 PurchaseOrderShortClosedExt extends "Purchase Header"
                 rec.Modify();
             end;
         }
+        field(50000; "Auto Invoice"; Boolean) //PT-FBTS
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50015; "Vendor Bill No."; Code[20]) //PT-FBTS
+        {
+            DataClassification = ToBeClassified;
+        }
+
+        //Gaurav_FBTS 061125
+        field(50016; "Response Details"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50017; "Response ID"; Integer)
+        {
+            DataClassification = ToBeClassified;
+        }
+        //Gaurav_FBTS 061125
 
     }
 

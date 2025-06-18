@@ -259,6 +259,7 @@ page 50057 "RSTN Transfer Order List"
                 {
                     ApplicationArea = Location;
                     Caption = 'Reo&pen';
+                    Visible = false;
                     Image = ReOpen;
                     ToolTip = 'Reopen the transfer order after being released for warehouse handling.';
 

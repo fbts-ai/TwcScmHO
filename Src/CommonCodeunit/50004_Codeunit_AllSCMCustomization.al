@@ -134,61 +134,61 @@ codeunit 50004 AllSCMCustomization
     ///for purchase return order
     /// 
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeSelectPostReturnOrderOption', '', true, true)]
-    local procedure PurchaseReturnOnBeforeSelectPostOrderOption(var PurchaseHeader: Record "Purchase Header"; DefaultOption: Integer; var IsHandled: Boolean; var Result: Boolean)
-    var
-        ShipQst: Label '&Ship';
-        Selection: Integer;
-    begin
-        IF PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::"Return Order" then begin
-            Selection := StrMenu(ShipQst, DefaultOption);
-            if Selection > 0 then Begin
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeSelectPostReturnOrderOption', '', true, true)]
+    // local procedure PurchaseReturnOnBeforeSelectPostOrderOption(var PurchaseHeader: Record "Purchase Header"; DefaultOption: Integer; var IsHandled: Boolean; var Result: Boolean)
+    // var
+    //     ShipQst: Label '&Ship';
+    //     Selection: Integer;
+    // begin
+    //     IF PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::"Return Order" then begin
+    //         Selection := StrMenu(ShipQst, DefaultOption);
+    //         if Selection > 0 then Begin
 
-                PurchaseHeader.Ship := Selection in [1, 1];
-                // PurchaseHeader.Invoice := Selection in [2, 2];
-                IsHandled := True;
-                Result := true;
-            End;
-        end;
-    end;
+    //             PurchaseHeader.Ship := Selection in [1, 1];
+    //             // PurchaseHeader.Invoice := Selection in [2, 2];
+    //             IsHandled := True;
+    //             Result := true;
+    //         End;
+    //     end;
+    // end;
 
 
     //AJ_ALLE_09272023
 
     // Need To Check
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeConfirmPost', '', false, false)]
-    local procedure OnBeforeConfirmSalesPost(var PurchaseHeader: Record "Purchase Header"; var HideDialog: Boolean; var IsHandled: Boolean; var DefaultOption: Integer);
-    var
-        UserSetup: Record "User Setup";
-    begin
-        HideDialog := true;
-        NewConfirmPost(PurchaseHeader);
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeConfirmPost', '', false, false)]
+    // local procedure OnBeforeConfirmSalesPost(var PurchaseHeader: Record "Purchase Header"; var HideDialog: Boolean; var IsHandled: Boolean; var DefaultOption: Integer);
+    // var
+    //     UserSetup: Record "User Setup";
+    // begin
+    //     HideDialog := true;
+    //     NewConfirmPost(PurchaseHeader);
+    // end;
 
-    local procedure NewConfirmPost(var PurchaseHeader: Record "Purchase Header"): Boolean
-    var
-        Selection: Integer;
-        ConfirmManagement: Codeunit "Confirm Management";
-        Default: Label 'None';
-        PurchInvoiceQst: Label 'Receive &and Invoice';
+    // local procedure NewConfirmPost(var PurchaseHeader: Record "Purchase Header"): Boolean
+    // var
+    //     Selection: Integer;
+    //     ConfirmManagement: Codeunit "Confirm Management";
+    //     Default: Label 'None';
+    //     PurchInvoiceQst: Label 'Receive &and Invoice';
 
-    begin
-        case PurchaseHeader."Document Type" of
-            PurchaseHeader."Document Type"::Order:
-                begin
-                    Selection := StrMenu(PurchInvoiceQst, 1);
-                    PurchaseHeader.Receive := Selection in [1, 1];
-                    PurchaseHeader.Receive := true;
-                    PurchaseHeader.Invoice := true;
-                    if Selection = 0 then
-                        exit(true);
-                    //     PurchaseHeader."Print Posted Documents" := false;
-                    // exit(true);
-                end;
+    // begin
+    //     case PurchaseHeader."Document Type" of
+    //         PurchaseHeader."Document Type"::Order:
+    //             begin
+    //                 Selection := StrMenu(PurchInvoiceQst, 1);
+    //                 PurchaseHeader.Receive := Selection in [1, 1];
+    //                 PurchaseHeader.Receive := true;
+    //                 PurchaseHeader.Invoice := true;
+    //                 if Selection = 0 then
+    //                     exit(true);
+    //                 //     PurchaseHeader."Print Posted Documents" := false;
+    //                 // exit(true);
+    //             end;
 
 
-        end;
-    end;
+    //     end;
+    // end;
 
     // //For Post Print
     // //AJ_ALLE_23012023

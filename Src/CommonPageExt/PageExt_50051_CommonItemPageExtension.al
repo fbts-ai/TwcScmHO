@@ -6,6 +6,11 @@ pageextension 50051 CommonItemPageExtension extends "Item Card"
         // Add changes to page layout here
         addlast(Item)
         {
+            field(Special; Rec.Special)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Special field.', Comment = '%';
+            }
             field(InstoreAllowed; Rec.InstoreAllowed)
             {
                 Caption = 'Instore Allowed';

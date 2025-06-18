@@ -37,6 +37,31 @@ tableextension 50008 Itemcard extends Item
         {
             caption = 'Auto Assembly';
         }
+        field(50112; "Special"; Boolean) //PT-FBTS
+        {
+            Caption = 'Next day delivery';
+        }
+        field(50108; "BI Super Category"; Code[100]) //PT-FBTS
+        {
+            caption = 'BI Super Category';
+            DataClassification = ToBeClassified;
+            TableRelation = SuperCategoryGroup;
+            trigger OnValidate()
+            var
+            begin
+                Rec."BI Category Code" := '';
+            end;
+        }
+        field(50109; "BI Category Code"; Text[100]) //PT-FBTS
+        {
+            caption = 'BI Category Code';
+            DataClassification = ToBeClassified;
+            TableRelation = CategoryGroupCode where(GroupCode = field("BI Super Category"));
+        }
+        field(50110; "Send to AP"; Boolean) //PT-FBTS
+        {
+            Caption = 'Send to AP';
+        }
     }
 
     var

@@ -6,8 +6,6 @@ page 50002 IndentCard
     SourceTable = IndentHeader;
     Caption = 'Indent Card';
     PromotedActionCategories = 'New," "," ",Process,Approval';
-
-
     layout
     {
 
@@ -92,6 +90,11 @@ page 50002 IndentCard
                     ApplicationArea = all;
                     Visible = true;
                 }
+                field("Order Type"; "Order Type") //PT-FBTS 19052025
+                {
+                    ApplicationArea = all;
+                    Visible = true;
+                }
                 field(Category; Rec.Category)
                 {
                     ApplicationArea = all;
@@ -118,49 +121,106 @@ page 50002 IndentCard
                         indent.SetRange("No.", Rec."No.");
                         if indent.FindFirst() then begin
                             if Rec.Type = Rec.Type::Item then begin
-                                Item.reset;
-                                Item.SetRange("Item Category Code", rec.Category);
-                                if item.FindFirst() then
-                                    repeat
-                                        IndentMappingsetup.Reset();
-                                        IndentMappingsetup.SetRange("Location Code", Rec."To Location code");
-                                        IndentMappingsetup.SetRange("Item No.", Item."No.");
-                                        IndentMappingsetup.SetRange("Block Indent", false);//PT-FBTS 03-07-2024
-                                        IndentMappingsetup.SetRange("Item Category", Item."Item Category Code");
-                                        IF IndentMappingsetup.FindFirst() then begin
+                                IF Rec."Order Type" = Rec."Order Type"::Regular then begin
+                                    Item.reset;
+                                    Item.SetRange(Special, false);
+                                    Item.SetRange("Item Category Code", rec.Category);
+                                    if item.FindFirst() then
+                                        repeat
+                                            IndentMappingsetup.Reset();
+                                            IndentMappingsetup.SetRange("Location Code", Rec."To Location code");
+                                            IndentMappingsetup.SetRange("Item No.", Item."No.");
+                                            IndentMappingsetup.SetRange("Block Indent", false);//PT-FBTS
+                                            IndentMappingsetup.SetRange("Item Category", Item."Item Category Code");
+                                            IF IndentMappingsetup.FindFirst() then begin
 
-                                            ItemforIndent.Init();
-                                            ItemforIndent.Type := ItemforIndent.Type::Item;
-                                            ItemforIndent."Item No." := Item."No.";
-                                            ItemforIndent.Description := Item.Description;
-                                            ItemforIndent."Unit of Measure" := Item."Base Unit of Measure";
-                                            ItemforIndent."Indent No." := rec."No.";
-                                            ItemforIndent."Item Category" := rec.Category;
+                                                ItemforIndent.Init();
+                                                ItemforIndent.Type := ItemforIndent.Type::Item;
+                                                ItemforIndent."Item No." := Item."No.";
+                                                ItemforIndent.Description := Item.Description;
+                                                ItemforIndent."Unit of Measure" := Item."Base Unit of Measure";
+                                                ItemforIndent."Indent No." := rec."No.";
+                                                ItemforIndent."Item Category" := rec.Category;
+                                                //ItemforIndent."Location Code" := rec."To Location code";//PT-FBTS
 
-                                            ILE.Reset();
-                                            ILE.SetRange("Item No.", Item."No.");
-                                            ILE.SetRange("Location Code", Rec."To Location code");
-                                            IF ILE.FindSet() then begin
-                                                ILE.CalcSums(Quantity);
-                                                ItemforIndent."Stock In Hand" := ILE.Quantity;
+
+                                                ILE.Reset();
+                                                ILE.SetRange("Item No.", Item."No.");
+                                                ILE.SetRange("Location Code", Rec."To Location code");
+                                                IF ILE.FindSet() then begin
+                                                    ILE.CalcSums(Quantity);
+                                                    ItemforIndent."Stock In Hand" := ILE.Quantity;
+                                                end;
+
+                                                //Clear("In-Transit");
+                                                ILE.Reset();
+                                                ILE.SetRange("Item No.", Item."No.");
+                                                ILE.SetRange("Location Code", Rec."To Location code");//PTFBTS 
+                                                ILE.SetRange("Entry Type", ILE."Entry Type"::Transfer);
+                                                IF ILE.FindSet() then begin
+                                                    ILE.CalcSums(Quantity);
+                                                    ItemforIndent."In-Transit" := ILE.Quantity;
+                                                end;
+                                                //    Message('%1', ItemforIndent."In-Transit");
+                                                ItemforIndent.Insert();
                                             end;
 
+                                        until Item.Next() = 0;
+                                    ItemforIndent.SetFilter("Indent No.", Rec."No.");
+                                    IF ItemforIndent.FindSet() then;
+                                    Page.Run(50003, ItemforIndent);
 
-                                            ILE.Reset();
-                                            ILE.SetRange("Item No.", Item."No.");
-                                            ILE.SetRange("Entry Type", ILE."Entry Type"::Transfer);
-                                            IF ILE.FindSet() then begin
-                                                ILE.CalcSums(Quantity);
-                                                ItemforIndent."In-Transit" := ILE.Quantity;
+                                end;
+                                IF Rec."Order Type" = Rec."Order Type"::Special then begin
+                                    Item.reset;
+                                    Item.SetRange(Special, True);
+                                    Item.SetRange("Item Category Code", rec.Category);
+                                    if item.FindFirst() then
+                                        repeat
+                                            IndentMappingsetup.Reset();
+                                            IndentMappingsetup.SetRange("Location Code", Rec."To Location code");
+                                            IndentMappingsetup.SetRange("Item No.", Item."No.");
+                                            IndentMappingsetup.SetRange("Block Indent", false);//PT-FBTS
+                                            IndentMappingsetup.SetRange("Item Category", Item."Item Category Code");
+                                            IF IndentMappingsetup.FindFirst() then begin
+
+                                                ItemforIndent.Init();
+                                                ItemforIndent.Type := ItemforIndent.Type::Item;
+                                                ItemforIndent."Item No." := Item."No.";
+                                                ItemforIndent.Description := Item.Description;
+                                                ItemforIndent."Unit of Measure" := Item."Base Unit of Measure";
+                                                ItemforIndent."Indent No." := rec."No.";
+                                                ItemforIndent."Item Category" := rec.Category;
+                                                //   ItemforIndent."Location Code" := rec."To Location code";//PT-FBTS
+
+
+                                                ILE.Reset();
+                                                ILE.SetRange("Item No.", Item."No.");
+                                                ILE.SetRange("Location Code", Rec."To Location code");
+                                                IF ILE.FindSet() then begin
+                                                    ILE.CalcSums(Quantity);
+                                                    ItemforIndent."Stock In Hand" := ILE.Quantity;
+                                                end;
+
+                                                //Clear("In-Transit");
+                                                ILE.Reset();
+                                                ILE.SetRange("Item No.", Item."No.");
+                                                ILE.SetRange("Location Code", Rec."To Location code");//PTFBTS 
+                                                ILE.SetRange("Entry Type", ILE."Entry Type"::Transfer);
+                                                IF ILE.FindSet() then begin
+                                                    ILE.CalcSums(Quantity);
+                                                    ItemforIndent."In-Transit" := ILE.Quantity;
+                                                end;
+                                                //    Message('%1', ItemforIndent."In-Transit");
+                                                ItemforIndent.Insert();
                                             end;
-                                            ItemforIndent.Insert();
-                                        end;
 
-                                    until Item.Next() = 0;
-                                ItemforIndent.SetFilter("Indent No.", Rec."No.");
-                                IF ItemforIndent.FindSet() then;
-                                Page.Run(50003, ItemforIndent);
+                                        until Item.Next() = 0;
+                                    ItemforIndent.SetFilter("Indent No.", Rec."No.");
+                                    IF ItemforIndent.FindSet() then;
+                                    Page.Run(50003, ItemforIndent);
 
+                                end;
                             end;
                             Rec.Category := '';
                             Rec.Modify();
@@ -255,7 +315,10 @@ page 50002 IndentCard
                     indentline.SetRange("DocumentNo.", Rec."No.");
                     IF indentline.FindSet() then
                         repeat
-                            IF Item.Get(indentline."Item Code") then;
+                            IF Item.Get(indentline."Item Code") then begin
+                                IF Rec."Order Type" = Rec."Order Type"::Special then
+                                    Item.TestField(Special);
+                            end;
                             IF Item.IsFixedAssetItem then begin
                                 indentline.TestField("FA Subclass");
                             end;
@@ -279,8 +342,10 @@ page 50002 IndentCard
                     //Rec.Modify(true);
 
 
-
-                    processdate := CreateDateTime(Rec."Posting date", invsetup."Indent Time");
+                    IF Rec."Order Type" = Rec."Order Type"::Special Then
+                        processdate := CreateDateTime(Rec."Posting date", invsetup."Indent Time")
+                    Else
+                        processdate := CreateDateTime(Rec."Posting date", invsetup."Indent Time");
                     currentdatetime := CreateDateTime(submitdate, submittime);
 
                     dur := processdate - currentdatetime;
@@ -288,20 +353,39 @@ page 50002 IndentCard
                     Rec."Submit Time" := Time;
 
                     IF dur <> 0 then begin
-                        IF invsetup."Max Submission limit" > (dur / 3600000) then begin
-                            Rec."Approval Required" := true;
-                            Rec."Approver Name" := usersetup."Indent Approver ID";
-                            indentline.Reset();
-                            indentline.SetRange("DocumentNo.", Rec."No.");
-                            IF indentline.FindSet() then begin
-                                indentline.ModifyAll("Approval Required", true);
+                        IF Rec."Order Type" = Rec."Order Type"::Special then begin
+                            IF invsetup."Max Submission limit Special" > (dur / 1800000) then begin
+                                Rec."Approval Required" := true;
+                                Rec."Approver Name" := usersetup."Indent Approver ID";
+                                indentline.Reset();
+                                indentline.SetRange("DocumentNo.", Rec."No.");
+                                IF indentline.FindSet() then begin
+                                    indentline.ModifyAll("Approval Required", true);
 
-                                indentline.ModifyAll("Approval Remarks", indentline."Approval Remarks"::"Submitted Beyond timeline");
+                                    indentline.ModifyAll("Approval Remarks", indentline."Approval Remarks"::"Submitted Beyond timeline");
+                                end;
+                                approvalreq := true;
+                                Rec.Modify();
+                                CurrPage.Update(true);
                             end;
-                            approvalreq := true;
-                            Rec.Modify();
-                            CurrPage.Update(true);
                         end;
+                        IF Rec."Order Type" = Rec."Order Type"::Regular then begin
+
+                            IF invsetup."Max Submission limit" > (dur / 3600000) then begin
+                                Rec."Approval Required" := true;
+                                Rec."Approver Name" := usersetup."Indent Approver ID";
+                                indentline.Reset();
+                                indentline.SetRange("DocumentNo.", Rec."No.");
+                                IF indentline.FindSet() then begin
+                                    indentline.ModifyAll("Approval Required", true);
+
+                                    indentline.ModifyAll("Approval Remarks", indentline."Approval Remarks"::"Submitted Beyond timeline");
+                                end;
+                                approvalreq := true;
+                                Rec.Modify();
+                                CurrPage.Update(true);
+                            end;
+                        End;
                     end;
                     Commit();
                     IF Rec.Status = Rec.Status::Rejected then

@@ -47,8 +47,10 @@ codeunit 50006 PurchasePriceExt
                 //Message(Format(tempPurchPrice."Direct Unit Cost"));
             end
             else begin
-                IF Not PurchaseHeader.LocalPurchase then
-                    Message('Purchase price is not define for this location ,kindly check it with system adminstrator');
+                IF Not PurchaseHeader."Auto Invoice" Then BEGIN
+                    IF Not PurchaseHeader.LocalPurchase then
+                        Message('Purchase price is not define for this location ,kindly check it with system adminstrator');
+                END;
             end;
         end;
 
@@ -88,7 +90,8 @@ codeunit 50006 PurchasePriceExt
                 //Message(Format(tempPurchPrice."Direct Unit Cost"));
             end
             else
-                Message('Purchase price is not define for this location ,kindly check it with system adminstrator');
+                IF Not TempPurchHeader."Auto Invoice" Then
+                    Message('Purchase price is not define for this location ,kindly check it with system adminstrator');
         end;
     End;
 

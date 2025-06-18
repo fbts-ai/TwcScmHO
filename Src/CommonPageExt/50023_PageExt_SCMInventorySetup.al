@@ -71,6 +71,10 @@ pageextension 50023 SCMInventorySetup extends "Inventory Setup"
             {
                 ApplicationArea = all;
             }
+            field("Max Submission limit Special"; rec."Max Submission limit Special")
+            {
+                ApplicationArea = all;
+            }
 
 
         }
@@ -104,6 +108,11 @@ pageextension 50023 SCMInventorySetup extends "Inventory Setup"
             {
                 ApplicationArea = All;
 
+            }
+            field("Conslid.indent Nos."; "Conslid.indent Nos.")
+            {
+                Caption = 'Conslid.indent Nos.';
+                ApplicationArea = all;
             }
             field("Indent Time"; rec."Indent Time")
             {
