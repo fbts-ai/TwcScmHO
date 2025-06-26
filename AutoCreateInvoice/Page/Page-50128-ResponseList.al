@@ -66,6 +66,10 @@ page 50128 "Response list"
                 {
                     ApplicationArea = All;
                 }
+                field("Accounting Date"; Rec."Accounting Date")
+                {
+                    ApplicationArea = All;
+                }
                 field("Invoice No."; Rec."Invoice No.")
                 {
                     ApplicationArea = All;
@@ -83,6 +87,45 @@ page 50128 "Response list"
     {
         area(Processing)
         {
+            action(SelectAll)
+            {
+                ApplicationArea = All;
+                Caption = 'Select All';
+                PromotedCategory = Process;
+                Promoted = true;
+                PromotedOnly = true;
+                PromotedIsBig = true;
+                Image = Select;
+
+                trigger OnAction()
+                var
+                    LogHeaderRec: Record LogHeader;
+                begin
+                    if LogHeaderRec.FindSet() then
+                        LogHeaderRec.ModifyAll(Select, true);
+
+                end;
+            }
+            action(DeleteSelectAll)
+            {
+                ApplicationArea = All;
+                Caption = 'Delete Select Lines';
+                PromotedCategory = Process;
+                Promoted = true;
+                PromotedOnly = true;
+                PromotedIsBig = true;
+                Image = Select;
+
+                trigger OnAction()
+                var
+                    LogHeaderRec: Record LogHeader;
+                begin
+                    if LogHeaderRec.FindSet() then begin
+                        LogHeaderRec.ModifyAll(Select, false);
+                    end;
+
+                end;
+            }
             action("Get Response")
             {
                 ApplicationArea = All;

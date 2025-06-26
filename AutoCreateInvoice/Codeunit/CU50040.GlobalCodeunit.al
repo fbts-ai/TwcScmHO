@@ -164,6 +164,10 @@ codeunit 50040 "Global Codeunit"
                 LogHeader."Payment State" := Token.AsValue().AsText();
             if HeaderObj.Get('status', Token) then
                 LogHeader."Status" := Token.AsValue().AsText();
+            if HeaderObj.Get('accounting_date', Token) then
+                Evaluate(LogHeader."Accounting Date", Token.AsValue().AsText());
+            if HeaderObj.Get('forklyft_reference', Token) then
+                Evaluate(LogHeader.forklyft_reference, Token.AsValue().AsText());
 
             LogHeader.ID := HeaderId;
             LogHeader.Insert();

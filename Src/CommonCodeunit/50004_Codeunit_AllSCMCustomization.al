@@ -1817,8 +1817,8 @@ var LotNo: Code[20]; var qty: Decimal; var qty_base: Decimal; var qtyshipbase: D
             PurchaseLine.Setrange("Document No.", DocumentNo);
             if PurchaseLine.FindSet() then begin
                 repeat
-                    if PurchaseLine."Quantity Received" <> PurchaseLine."Quantity Invoiced" then
-                        error('Sales Invoice of Line No. %1 is pending', PurchaseLine."Line No.");
+                    //if PurchaseLine."Quantity Received" <> PurchaseLine."Quantity Invoiced" then
+                    //  error('Sales Invoice of Line No. %1 is pending', PurchaseLine."Line No."); //Aashish (Desable after Start New process GRN and invoice is seperate)
                     if PurchaseLine."Qty. to Receive" <> 0 then//PT-FBTS 240524
                         Error('Please Remove Qty.to Receive');//PT-FBTS 240524
                 until PurchaseLine.Next = 0;
@@ -2092,18 +2092,21 @@ var LotNo: Code[20]; var qty: Decimal; var qty_base: Decimal; var qtyshipbase: D
         TempPurchOrderLine: Record "Purchase Line";
         ItemRec: Record Item;
     begin
-        IF Rec.Type = Rec.Type::Item then begin
-            IF Rec."No." <> '' then Begin
-                if ItemRec.Get(Rec."No.") then begin
-                    if ItemRec.Type <> ItemRec.Type::Service then begin
-                        TempPurchOrderLine.Reset();
-                        TempPurchOrderLine.SetRange("No.", Rec."No.");
-                        TempPurchOrderLine.SetRange("Document No.", Rec."Document No.");
-                        IF TempPurchOrderLine.FindFirst() then
-                            Error('You can not enter same article twice in purchase order');
+        IF Rec."Document Type" = Rec."Document Type"::Order then begin
+            IF Rec.Type = Rec.Type::Item then begin
+                IF Rec."No." <> '' then Begin
+                    if ItemRec.Get(Rec."No.") then begin
+                        if ItemRec.Type <> ItemRec.Type::Service then begin
+                            TempPurchOrderLine.Reset();
+                            TempPurchOrderLine.SetRange("No.", Rec."No.");
+                            TempPurchOrderLine.SetRange("Document No.", Rec."Document No.");
+
+                            IF TempPurchOrderLine.FindFirst() then
+                                Error('You can not enter same article twice in purchase order');
+                        end;
                     end;
-                end;
-            End;
+                End;
+            end;
         end;
 
         //  TempPurchOrderLine.SetRange(Rec.Type,"Document Type"::);

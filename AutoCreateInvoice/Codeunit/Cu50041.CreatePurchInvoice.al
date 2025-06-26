@@ -58,11 +58,11 @@ codeunit 50041 "Create Purchase Invoice"
         PurchHeader.Validate("Buy-from Vendor No.", VendorNo);
         PurchHeader.Validate("Location Code", LogHeader."Store Code");
         PurchHeader."Response ID" := LogHeader.ID;
-        PurchHeader."Vendor Invoice No." := LogHeader.bill_reference;
-        PurchHeader.Validate("Posting Date", LogHeader."Bill Date");
+        PurchHeader."Vendor Invoice No." := LogHeader.forklyft_reference;
+        PurchHeader."Vendor Bill No." := LogHeader.bill_reference;
+        PurchHeader.Validate("Document Date", LogHeader."Bill Date");
+        PurchHeader.Validate("Posting Date", LogHeader."Accounting Date");
         PurchHeader.Validate("Due Date", LogHeader."Due Date");
-        // PurchHeader.Validate("Currency Code", LogHeader."Currency");
-        PurchHeader.Validate("Document Date", Today);
         PurchHeader."Assigned User ID" := UserId;
 
         PurchHeader."Response Details" := true;

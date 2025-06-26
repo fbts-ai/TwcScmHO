@@ -124,6 +124,14 @@ table 50040 LogHeader
         {
             DataClassification = ToBeClassified;
         }
+        field(31; "Accounting Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(32; "forklyft_reference"; Code[200])
+        {
+            DataClassification = ToBeClassified;
+        }
 
     }
 
