@@ -62,6 +62,12 @@
       "version":  "22.2.56969.57617"
      },
      {
+  "id":  "f1d9b696-156b-4251-b542-34e549fa80e9",
+  "publisher":  "Microsoft",
+  "name":  "India Voucher Interface",
+  "version":  "22.2.56969.57617"
+},
+     {
       "id":  "7106d701-c601-4a5f-97c2-b8b323ae2c18",
       "publisher":  "Microsoft",
       "name":  "QR Generator",

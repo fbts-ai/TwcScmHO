@@ -255,6 +255,18 @@ tableextension 50023 CommonUserSetupExt extends "User Setup"
         {
             DataClassification = ToBeClassified;
         }
+        field(50158; "Master Delete allow"; Boolean)//PT-Fbts
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50160; "Edit Master Enable"; Boolean)//PT-Fbts
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50161; "Edit Master view"; Boolean)//PT-Fbts
+        {
+            DataClassification = ToBeClassified;
+        }
         //AJ_ALLE_02102024
         //TodayQuarantine //AJ_ALLE_22012024 - open
         //AJ_ALLE_17012023

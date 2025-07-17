@@ -299,7 +299,8 @@ page 51017 "GRN List"
 
                                         PurchaseHeader.Validate("Buy-from Vendor No.", GRN_lRec."Vendor No.");
                                         PurchaseHeader.Validate("Location Code", GRN_lRec."Location Code");
-                                        PurchaseHeader.Validate("Posting Date", Today);
+                                        PurchaseHeader.Validate("Posting Date", GRN_lRec."GRN Date");//Aashish
+                                        //PurchaseHeader.Validate("Posting Date", Today);
                                         IF GRN_lRec."Vendor Invoice Date" <> '' then begin
                                             Evaluate(DocDate, GRN_lRec."Vendor Invoice Date");
                                             PurchaseHeader.Validate("Document Date", DocDate);
@@ -361,6 +362,8 @@ page 51017 "GRN List"
                                     PurchaseLine.Validate("GST Group Code", PurchaseLineGSTValue."GST Group Code");
                                     PurchaseLine.Validate("HSN/SAC Code", PurchaseLineGSTValue."HSN/SAC Code");
                                     PurchaseLine.Validate("Dimension Set ID", PurchaseLineGSTValue."Dimension Set ID");
+                                    PurchaseLine."Description 2" := PurchaseLineGSTValue."Description 2";//Aashish
+                                    PurchaseLine.Remarks := PurchaseLineGSTValue.Remarks;//Aashish
                                     PurchaseLine.Description := GRN_lRec.Description;
 
 
