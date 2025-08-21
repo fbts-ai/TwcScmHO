@@ -858,6 +858,7 @@ page 50039 "Out Transfer Order"
                         DocNo: Code[20];
                         TempJournalBatchName: Record "Item Journal Batch";
                         TempILE: Record "Item Ledger Entry";
+                        FixedAssets: Record "Fixed Asset";
 
                         CodeunittransferInOut: Codeunit TransferInOut;
 
@@ -1032,7 +1033,24 @@ page 50039 "Out Transfer Order"
 
                         IF Confirm('Please make sure that you have calculate GST on transfer order , Do you want to continue') Then
                             CodeunittransferInOut.TransferInoutPost(Rec, true, false);
-                        // CODEUNIT.Run(CODEUNIT::"TransferOrder-Post (Yes/No)", Rec);
+
+
+                        TempTransferLine1.Reset();
+                        TempTransferLine1.SetRange("Document No.", Rec."No.");
+                        TempTransferLine1.SetFilter(FixedAssetNo, '<>%1', '');
+                        TempTransferLine1.SetFilter(TempTransferLine1."Quantity Shipped", '%1', 0);
+                        TempTransferLine1.SetFilter("Derived From Line No.", '%1', 0);
+                        IF TempTransferLine1.FindSet() then begin
+                            repeat
+                                FixedAssets.Reset();
+                                FixedAssets.SetRange("No.", TempTransferLine1.FixedAssetNo);
+                                if FixedAssets.FindFirst() then begin
+                                    FixedAssets."Used To" := false;
+                                    FixedAssets.Modify();
+                                end;
+                            Until TempTransferLine1.Next() = 0;
+                        end;
+
                     end;
                 }
                 /*

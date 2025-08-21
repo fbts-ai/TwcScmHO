@@ -65,6 +65,9 @@ table 50002 "Item For Indent"
             FieldClass = FlowField;
             CalcFormula = lookup(Item."Indent Unit of Measure" where("No." = field("Item No.")));
         }
+        field(50110; "Location Code"; Code[20])//PT-FBTS
+        {
+        }
     }
 
     keys

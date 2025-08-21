@@ -1224,14 +1224,29 @@ end;
     //Master Validation Start
     [EventSubscriber(ObjectType::Page, Page::"Item Card", 'OnDeleteRecordEvent', '', true, true)]
     local procedure RunOnDeleteRecordEvent(var Rec: Record Item; var AllowDelete: Boolean)
+
+    var
+        Usersetup: Record "User Setup";
     begin
-        Error('You cannot Delete Items');
+        if Usersetup.Get(UserId) then
+            if Usersetup."Master Delete allow" = false then begin
+                // CurrPage.Editable(false);
+                Error('You are not authorized');
+                //CurrPage.Close();
+            end;
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"LSC Retail Item Card", 'OnDeleteRecordEvent', '', true, true)]
     local procedure RetailOnDeleteRecordEvent(var Rec: Record Item; var AllowDelete: Boolean)
+    var
+        Usersetup: Record "User Setup";
     begin
-        Error('You cannot Delete Items');
+        if Usersetup.Get(UserId) then
+            if Usersetup."Master Delete allow" = false then begin
+                // CurrPage.Editable(false);
+                Error('You are not authorized');
+                //CurrPage.Close();
+            end;
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Item Card", 'OnInsertRecordEvent', '', true, true)]
@@ -1279,8 +1294,15 @@ end;
     //for unit of measure
     [EventSubscriber(ObjectType::Page, Page::"Units of Measure", 'OnDeleteRecordEvent', '', true, true)]
     local procedure UoMOnDeleteRecordEvent(var Rec: Record "Unit of Measure"; var AllowDelete: Boolean)
+    var
+        Usersetup: Record "User Setup";
     begin
-        Error('You cannot Delete Items');
+        if Usersetup.Get(UserId) then
+            if Usersetup."Master Delete allow" = false then begin
+                // CurrPage.Editable(false);
+                Error('You are not authorized');
+                //CurrPage.Close();
+            end;
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Units of Measure", 'OnInsertRecordEvent', '', true, true)]
@@ -1310,8 +1332,15 @@ end;
 
     [EventSubscriber(ObjectType::Page, Page::"Customer Card", 'OnDeleteRecordEvent', '', true, true)]
     local procedure RunOnDeleteRecordEvent1()
+    var
+        Usersetup: Record "User Setup";
     begin
-        Error('You cannot Delete customer');
+        if Usersetup.Get(UserId) then
+            if Usersetup."Master Delete allow" = false then begin
+                // CurrPage.Editable(false);
+                Error('You are not authorized');
+                //CurrPage.Close();
+            end;
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Customer Card", 'OnInsertRecordEvent', '', true, true)]
@@ -1339,8 +1368,15 @@ end;
 
     [EventSubscriber(ObjectType::Page, Page::"LSC Retail Customer Card", 'OnDeleteRecordEvent', '', true, true)]
     local procedure RetailOnDeleteRecordEvent1()
+    var
+        Usersetup: Record "User Setup";
     begin
-        Error('You cannot Delete customer');
+        if Usersetup.Get(UserId) then
+            if Usersetup."Master Delete allow" = false then begin
+                // CurrPage.Editable(false);
+                Error('You are not authorized');
+                //CurrPage.Close();
+            end;
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"LSC Retail Customer Card", 'OnInsertRecordEvent', '', true, true)]
@@ -1368,9 +1404,15 @@ end;
 
     [EventSubscriber(ObjectType::Page, Page::"Vendor Card", 'OnDeleteRecordEvent', '', true, true)]
     local procedure RunOnDeleteRecordEvent2()
-    Begin
-
-        Error('You Do not have permission to delete vendor');
+    var
+        Usersetup: Record "User Setup";
+    begin
+        if Usersetup.Get(UserId) then
+            if Usersetup."Master Delete allow" = false then begin
+                // CurrPage.Editable(false);
+                Error('You are not authorized');
+                //CurrPage.Close();
+            end;
     end;
 
 
@@ -1400,9 +1442,15 @@ end;
 
     [EventSubscriber(ObjectType::Page, Page::"LSC Retail Vendor Card", 'OnDeleteRecordEvent', '', true, true)]
     local procedure RetailOnDeleteRecordEvent2()
-    Begin
-
-        Error('You Do not have permission to delete vendor');
+    var
+        Usersetup: Record "User Setup";
+    begin
+        if Usersetup.Get(UserId) then
+            if Usersetup."Master Delete allow" = false then begin
+                // CurrPage.Editable(false);
+                Error('You are not authorized');
+                //CurrPage.Close();
+            end;
     end;
 
 
@@ -1450,11 +1498,14 @@ end;
     [EventSubscriber(ObjectType::Page, Page::"Production BOM", 'OnDeleteRecordEvent', '', true, true)]
     local procedure productionOnDeleteRecordEvent2()
     var
-        TempUserSetup: Record "User Setup";
+        Usersetup: Record "User Setup";
     begin
-        //If (TempUserSetup.get(UserId)) then;
-        //if Not TempUserSetup.IsModifyProductionBom then
-        Error('You Do not have permission to delete Production BOM');
+        if Usersetup.Get(UserId) then
+            if Usersetup."Master Delete allow" = false then begin
+                // CurrPage.Editable(false);
+                Error('You are not authorized');
+                //CurrPage.Close();
+            end;
     end;
 
 
@@ -2722,7 +2773,7 @@ var LotNo: Code[20]; var qty: Decimal; var qty_base: Decimal; var qtyshipbase: D
         Usersetup: Record "User Setup";
     begin
         if Usersetup.Get(UserId) then
-            if Usersetup."Allow Master Modification" = false then begin
+            if Usersetup."Master Delete allow" = false then begin
                 // CurrPage.Editable(false);
                 Error('You are not authorized');
                 //CurrPage.Close();

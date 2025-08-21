@@ -122,6 +122,10 @@ pageextension 50003 "Location Extension" extends "Location Card"
                 {
                     ApplicationArea = all;
                 }
+                field("Consumption Qty change Allow"; "Consumption Qty change Allow") //PT-FBTS 060325
+                {
+                    ApplicationArea = all;
+                }
             }
 
         }

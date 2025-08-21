@@ -67,6 +67,18 @@ pageextension 50020 SCMUsersetup extends "User Setup"
             {
                 ApplicationArea = all;
             }
+            field("Edit Master Enable"; "Edit Master Enable")//PT-FBTS
+            {
+                ApplicationArea = all;
+            }
+            field("Edit Master view"; "Edit Master view")//PT-FBTS
+            {
+                ApplicationArea = all;
+            }
+            field("Master Delete allow"; "Master Delete allow")//PT-FBTS
+            {
+                ApplicationArea = all;
+            }
             //NTCNFRM
             // field("Multiple Location Access"; rec."Multiple Location Access")
             // {

@@ -5,11 +5,13 @@ pageextension 50082 ItemExt extends "Item List"
     {
         addafter(InventoryField) //PT-Fbts 16-08-24
         {
-            field("Qty. on Purch. Order"; "Qty. on Purch. Order")
-            {
-                ApplicationArea = all;
-                Caption = 'Open PO Qty.';
-            }
+            // field("Qty. on Purch. Order"; "Qty. on Purch. Order")
+            // {
+            //     ApplicationArea = all;
+            //     Caption = 'Open PO Qty.';
+            // }
+            field("Open PO Qty."; "Open PO Qty.")
+            { ApplicationArea = all; }//PT-FBTS-11082025
         }
     }
     // trigger OnOpenPage()

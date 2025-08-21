@@ -2558,7 +2558,7 @@ codeunit 50107 "Einvoice CU"
         SalesLine.SETRANGE("Document No.", SalesHeader."No.");
         SalesLine.SetFilter(SalesLine.Description, '<>%1', 'ROUNDED OFF');
         SalesLine.SetFilter("HSN/SAC Code", '<>%1', '');
-        SalesLine.SetFilter(Type, '%1|%2', SalesLine.Type::Item, SalesLine.Type::"G/L Account");
+        SalesLine.SetFilter(Type, '%1|%2|%3', SalesLine.Type::Item, SalesLine.Type::"G/L Account", SalesLine.Type::"Fixed Asset");
         IF SalesLine.FINDSET THEN
             REPEAT
                 // GSTRate := SaleInvoice_GSTDetailsPer;//Ashish ROUND(SalesLine."GST %", 1);

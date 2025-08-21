@@ -23,6 +23,13 @@ tableextension 50029 PurchaseLineExt extends "Purchase Line"
             CalcFormula = lookup("Purchase Header"."Document Date" where("No." = field("Document No.")));
 
         }
+        field(50117; "Short Close"; Boolean) //PT-FBTS 180225
+        {
+
+            FieldClass = FlowField;
+            CalcFormula = lookup("Purchase Header".ShortClosed where("No." = field("Document No.")));
+
+        }
         //AJ_Alle_25102023
         modify(Quantity)
         {

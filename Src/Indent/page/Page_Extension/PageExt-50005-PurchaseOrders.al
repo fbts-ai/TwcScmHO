@@ -8,6 +8,14 @@ pageextension 50005 PurchaseOrders extends "Purchase Order List"
         //     Visible = false;
         // }
         // Add changes to page layout here
+        addafter("Document Date")
+        {
+            field(CreatedBy; CreatedBy)
+            {
+                ApplicationArea = all;
+                Caption = 'Created By';
+            }
+        }
 
         addafter("Amount Including VAT")
         {
@@ -56,4 +64,28 @@ pageextension 50005 PurchaseOrders extends "Purchase Order List"
     var
         myInt: Integer;
         Seteditable: Boolean;
+        CreatedBy: Text[100];
+
+
+    trigger OnAfterGetCurrRecord() ///PT-FBTS
+    var
+        user: Record user;
+    begin
+        user.Reset();
+        user.SetRange("User Security ID", Rec.SystemCreatedBy);
+        if user.FindFirst() then
+            CreatedBy := user."User Name";
+        ///PT-FBTS
+    end;
+
+    trigger OnAfterGetRecord() ///PT-FBTS
+    var
+        user: Record user;
+    begin
+        user.Reset();
+        user.SetRange("User Security ID", Rec.SystemCreatedBy);
+        if user.FindFirst() then
+            CreatedBy := user."User Name";
+        ///PT-FBTS
+    end;
 }

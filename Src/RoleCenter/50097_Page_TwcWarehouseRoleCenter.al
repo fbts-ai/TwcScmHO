@@ -182,7 +182,7 @@ page 50097 TwcWarehouseManagerRoleCenter
             action(InventoryCounting)
             {
                 ApplicationArea = All;
-                Caption = 'Inventory Counting List';
+                Caption = 'StockAuditHeader  List';
                 Image = "Order";
                 RunObject = Page StockAuditList;
                 ToolTip = 'Inventory Counting List';

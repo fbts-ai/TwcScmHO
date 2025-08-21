@@ -4,6 +4,11 @@ pageextension 50038 ProductionJournalExt extends "Production Journal"
     {
         // Add changes to page layout here
 
+
+
+
+
+
         addafter("Scrap Quantity")
         {
             field(ProdutionOrderRemark; Rec.ProdutionOrderRemark)
@@ -13,7 +18,32 @@ pageextension 50038 ProductionJournalExt extends "Production Journal"
         }
         modify(Quantity) //PT-FBTS -16-10-24
         {
-            Editable = false;
+            Editable = EditBool;
+
+
+            trigger OnAfterValidate()
+            var
+                ProdOrderCmponent: Record "Prod. Order Component";
+                InvSetup: Record "Inventory Setup";
+            begin
+                //Gaurav_FBTS++
+                InvSetup.Get();
+                ProdOrderCmponent.Reset();
+                ProdOrderCmponent.SetRange("Prod. Order No.", Rec."Document No.");
+                ProdOrderCmponent.SetRange("Item No.", Rec."Item No.");
+                if ProdOrderCmponent.FindFirst() then begin
+
+                    // Ensure quantities are compared as expected
+                    if (Rec.Quantity > ProdOrderCmponent."Expected Quantity" * (100 + InvSetup."Max. Quantity Percent") / 100) then
+                        Error('You cannot enter more than the maximum quantity.')
+
+                    else
+                        if (Rec.Quantity < ProdOrderCmponent."Expected Quantity" * (100 - InvSetup."Min. Quantity Percent") / 100) then
+                            Error('You cannot enter less than the minimum quantity.');
+                end;
+                //Gaurav_FBTS--
+
+            End;
         }
         modify("Output Quantity")
         {
@@ -174,6 +204,7 @@ pageextension 50038 ProductionJournalExt extends "Production Journal"
 
     var
         myInt: Integer;
+        EditBool: Boolean;
 
     trigger OnDeleteRecord(): Boolean //PTFBTS // 11-09-24
     var
@@ -181,4 +212,33 @@ pageextension 50038 ProductionJournalExt extends "Production Journal"
     begin
         Error('You can not delete this documnet');
     end;
+
+    trigger OnAfterGetRecord()
+    var
+        LocationRec: Record Location;
+    begin
+        If LocationRec.Get(Rec."Location Code") then begin
+            if LocationRec."Consumption Qty change Allow" = true then begin
+                EditBool := true;
+            end
+            else
+                EditBool := false;
+        end;
+
+    end;
+
+    trigger OnOpenPage()
+    var
+        LocationRec: Record Location;
+    begin
+        If LocationRec.Get(Rec."Location Code") then begin
+            if LocationRec."Consumption Qty change Allow" = true then begin
+                EditBool := true;
+            end
+            else
+                EditBool := false;
+        end;
+
+    end;
+
 }

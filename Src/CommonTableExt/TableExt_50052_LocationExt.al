@@ -124,6 +124,11 @@ tableextension 50052 LocationCardExt extends Location
         {
             DataClassification = ToBeClassified;
         }
+        field(50125; "Consumption Qty change Allow"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+
+        }
     }
 
     var

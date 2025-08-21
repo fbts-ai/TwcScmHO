@@ -22,6 +22,7 @@ page 50073 WastageEntryCard
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                     Importance = Promoted;
 
                     trigger OnAssistEdit()

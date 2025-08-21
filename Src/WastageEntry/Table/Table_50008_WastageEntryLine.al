@@ -22,21 +22,54 @@ table 50008 WastageEntryLine
         {
             DataClassification = ToBeClassified;
         }
+        // field(5; "Item Code"; Code[20])
+        // {
+        //     DataClassification = ToBeClassified;
+        //     TableRelation = Item;
+        //     trigger OnValidate()
+        //     var
+        //         TempUnitOfMeasure: Record "Unit of Measure";
+        //     begin
+        //         IF TempItem.Get(Rec."Item Code") then;
+        //         Description := TempItem.Description;
+        //         "Unit of Measure Code" := TempItem."Base Unit of Measure";
+        //         UnitPrice := TempItem."Unit Cost";
+        //         Amount := (Quantity * UnitPrice);
+        //     end;
+        // }
         field(5; "Item Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = Item;
             trigger OnValidate()
             var
                 TempUnitOfMeasure: Record "Unit of Measure";
+                wastageHeader: Record WastageEntryHeader;
+                StockkeepingUnitPrice: Record "Stockkeeping Unit";//PT-FBTS
+                TempWastageEntryHead: Record WastageEntryHeader;
             begin
+                ////OldCode
                 IF TempItem.Get(Rec."Item Code") then;
                 Description := TempItem.Description;
                 "Unit of Measure Code" := TempItem."Base Unit of Measure";
-                UnitPrice := TempItem."Unit Cost";
-                Amount := (Quantity * UnitPrice);
+                // UnitPrice := TempItem."Unit Cost";
+                // Amount := (Quantity * UnitPrice);
+                ////OldCode
+                TempWastageEntryHead.Reset();
+                TempWastageEntryHead.SetRange(TempWastageEntryHead."No.", Rec."DocumentNo.");
+                IF TempWastageEntryHead.FindFirst() then;
+                StockkeepingUnitPrice.Reset(); //PT-FBTS
+                StockkeepingUnitPrice.SetRange("Location Code", TempWastageEntryHead."Location Code");
+                StockkeepingUnitPrice.SetFilter("Unit Cost", '<>%1', 0);
+                StockkeepingUnitPrice.SetRange("Item No.", Rec."Item Code");
+                if StockkeepingUnitPrice.FindFirst() then begin
+                    UnitPrice := StockkeepingUnitPrice."Unit Cost";
+                end
+                else
+                    UnitPrice := TempItem."Unit Cost";
+
             end;
         }
+
         field(6; "Description"; Text[100])
         {
             DataClassification = ToBeClassified;
@@ -55,7 +88,6 @@ table 50008 WastageEntryLine
                 Amount := (Quantity * UnitPrice);
 
                 //***  ALLE MY_09-10-2023  Begin
-
 
             end;
         }

@@ -43,10 +43,10 @@ Page 50040 "Transfer Order Out Subform"
                         IF TempILE.FindSet() then
                             repeat
                                 qty := qty + TempILE.Quantity;
-                                until TempILE.Next() = 0;
-                                ItemInventory := qty;
-                                CurrPage.Update();
-                                UpdateForm(true);
+                            until TempILE.Next() = 0;
+                        ItemInventory := qty;
+                        CurrPage.Update();
+                        UpdateForm(true);
 
 
                     end;
@@ -429,6 +429,39 @@ Page 50040 "Transfer Order Out Subform"
                     begin
                         Rec.Find();
                         Rec.ShowReservation();
+                    end;
+                }
+                action("Price Update")
+                {
+                    ApplicationArea = all;
+                    Caption = 'Price Update';
+                    Image = Receipt;
+                    ShortCutKey = 'Shift+Ctrl+R';
+                    ToolTip = 'View or edit serial numbers and lot numbers that are assigned to the item on the document or journal line.';
+
+                    trigger OnAction()
+                    var
+                        Transferline: Record "Transfer Line";
+                        FADepreciationBook: Record "FA Depreciation Book";
+                        ForupdateFA2: Record "Fixed Asset";
+                    begin
+
+                        Transferline.Reset();
+                        Transferline.SetRange("Document No.", Rec."Document No.");
+                        if Transferline.FindSet() then
+                            repeat
+                                if ForupdateFA2.Get(Transferline.FixedAssetNo) then
+                                    rec."Parent Fixed Asset" := ForupdateFA2."Parent Fixed Asset";
+                                ForupdateFA2."Used To" := true;
+                                FADepreciationBook.SetRange("FA No.", Transferline.FixedAssetNo);
+                                if FADepreciationBook.FindFirst() then begin
+                                    FADepreciationBook.CalcFields("Book Value");
+                                    Transferline.Amount := FADepreciationBook."Book Value";
+                                    Transferline."Transfer Price" := FADepreciationBook."Book Value";
+                                    Transferline.Description := ForupdateFA2.Description;
+                                    Transferline.Modify();
+                                end;
+                            until Transferline.Next() = 0;
                     end;
                 }
                 action(ReserveFromInventory)

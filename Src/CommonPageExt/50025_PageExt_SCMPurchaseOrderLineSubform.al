@@ -9,6 +9,10 @@ pageextension 50025 SCMPurchaseOrderLineSubform extends "Purchase Order Subform"
 
         }
         */
+        modify("Location Code")
+        {
+            Editable = false; //PT-FBTS 070325
+        }
 
         modify("Direct Unit Cost")  //////PT-FBTS 04/10/24
         {

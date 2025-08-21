@@ -103,6 +103,7 @@ page 50003 "Indent Item"
                 trigger OnAction();
                 var
                     IndentLine: Record Indentline;
+                    TWCPurchasePrice: Record TWCPurchasePrice;
                     IndentLine1: Record Indentline;
                     IndentLineNew: Record Indentline;
                     IndetSubage: Page "Indent Line";
@@ -121,7 +122,41 @@ page 50003 "Indent Item"
                         IF NOT (IndentHeader.Status = 1) OR (IndentHeader.Status = 0) Then
                             Error('Indent Status Must be Open.');
                     end;
-                    //PT-FBTS -07-08-2024
+                    // //PT-FBTS -07-08-2024
+                    // //////////////////////////
+                    // IF rec.FindSet() then //PT-FBTS-
+                    //     repeat
+                    //         TWCPurchasePrice.Reset();
+                    //         TWCPurchasePrice.SetRange("Item No.", rec."Item No.");
+                    //         TWCPurchasePrice.SetRange("Location Code", rec."Location Code");
+                    //         // Excludes today's date
+                    //         if TWCPurchasePrice.FindLast() then begin
+                    //             //repeat
+                    //             if TWCPurchasePrice."Ending Date" <> 0D then begin
+                    //                 if TWCPurchasePrice."Ending Date" < today then begin
+                    //                     // TWCPurchasePrice1.Reset();
+                    //                     // TWCPurchasePrice1.SetRange("Item No.", TWCPurchasePrice."Item No.");
+                    //                     // TWCPurchasePrice1.SetRange("Location Code", TWCPurchasePrice."Location Code");
+                    //                     // TWCPurchasePrice1.SetFilter("Ending Date", '<%1', Today); // Excludes today's date
+                    //                     // if TWCPurchasePrice1.FindLast() then begin
+                    //                     if rec."Indent Qty" <> 0 then
+                    //                         Error('Purchase Price for item %1..%2', Rec."Item No.", 'has expired. Please remove this item from the indent and continue. Additionally, email your Area Manager, SCM, and MDM teams to update the pricing.');
+                    //                     // Throws an error with variable 'hhd'
+                    //                     //                                                                                              // end;
+                    //                 End;                                                                               // until TWCPurchasePrice.Next() = 0;
+                    //                                                                                                    // end;
+                    //             End;
+                    //         end;
+                    //     Until Rec.Next() = 0;
+
+                    // /////////////////////////
+
+
+
+
+
+
+
 
                     if not Confirm('Do You want to Insert these lines in Indent Page?', false) then
                         exit

@@ -141,7 +141,7 @@ page 50002 IndentCard
                                                 ItemforIndent."Unit of Measure" := Item."Base Unit of Measure";
                                                 ItemforIndent."Indent No." := rec."No.";
                                                 ItemforIndent."Item Category" := rec.Category;
-                                                //ItemforIndent."Location Code" := rec."To Location code";//PT-FBTS
+                                                ItemforIndent."Location Code" := rec."To Location code";//PT-FBTS
 
 
                                                 ILE.Reset();
@@ -191,7 +191,7 @@ page 50002 IndentCard
                                                 ItemforIndent."Unit of Measure" := Item."Base Unit of Measure";
                                                 ItemforIndent."Indent No." := rec."No.";
                                                 ItemforIndent."Item Category" := rec.Category;
-                                                //   ItemforIndent."Location Code" := rec."To Location code";//PT-FBTS
+                                                ItemforIndent."Location Code" := rec."To Location code";//PT-FBTS
 
 
                                                 ILE.Reset();

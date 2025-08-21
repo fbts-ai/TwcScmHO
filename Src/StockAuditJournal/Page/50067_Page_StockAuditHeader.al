@@ -873,7 +873,7 @@ page 50067 StockAuditHeader
                                 // Message('%1', UnitPrice);
                                 until stockkeepingunit.Next() = 0;
                             end;
-                            stockLineRec.UnitPrice := UnitPrice;
+                            stockLineRec.Validate(UnitPrice, UnitPrice);//PT-FBTS- 22-07-25
                             stockLineRec.Modify();
                         until stockLineRec.Next() = 0;
 
@@ -899,6 +899,17 @@ page 50067 StockAuditHeader
         End
         Else
             CurrPage.Editable(False);
+    end;
+
+    trigger OnDeleteRecord(): Boolean //PT-FBTS
+    var
+        StockLine: Record StockAuditLine;
+    begin
+        StockLine.Reset();
+        StockLine.SetRange("DocumentNo.", Rec."No.");
+        if StockLine.FindFirst() then begin
+            StockLine.DeleteAll();
+        end;
     end;
 
     trigger OnAfterGetRecord()

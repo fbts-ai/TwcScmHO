@@ -154,6 +154,14 @@ tableextension 50024 SCMInventorySetupExt extends "Inventory Setup"
         }
         field(50125; "Max Submission limit Special"; Integer)
         { }
+        field(50122; "Min. Quantity Percent"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50123; "Max. Quantity Percent"; Decimal)
+        {
+            DataClassification = ToBeClassified;
+        }
 
     }
 

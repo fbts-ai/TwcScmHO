@@ -74,16 +74,39 @@ tableextension 50040 VendorMSMEExt extends Vendor
                 end;
             end; //else
         }
-        modify("P.A.N. No.") ////PT-FBTS //08-08-24
+        modify("P.A.N. No.") ////PTFBTS
         {
             trigger OnAfterValidate()
             var
                 vedorRec: Record Vendor;
+                g_cdePanNo: Text[50];
             begin
+                // if (Rec."GST Registration No." = '') and (Rec."P.A.N. No." = str(Rec."P.A.N. No.", 'A', 10)) then
+                //     Error('please');
+                if "P.A.N. No." <> '' then begin
+                    g_cdePanNo := CopyStr("P.A.N. No.", 1, 10);  // Grabs the first 5 characters
+                    // Check if the first, second, and fifth characters are alphabets, and the fourth is a digit
+                    if not (g_cdePanNo[1] IN ['A' .. 'Z']) or
+                       not (g_cdePanNo[2] IN ['A' .. 'Z']) or
+                       not (g_cdePanNo[3] IN ['A' .. 'Z']) or
+                       not (g_cdePanNo[4] IN ['A' .. 'Z']) or
+                       not (g_cdePanNo[5] IN ['A' .. 'Z']) or
+                       not (g_cdePanNo[6] IN ['0' .. '9']) or
+                       not (g_cdePanNo[7] IN ['0' .. '9']) or
+                       not (g_cdePanNo[8] IN ['0' .. '9']) or
+                       not (g_cdePanNo[9] IN ['0' .. '9']) or
+                       not (g_cdePanNo[10] IN ['A' .. 'Z']) then
+                        Error('Invalid PAN Number');
+                end;
+
+
                 if "P.A.N. No." <> '' then begin
                     if StrLen(Rec."P.A.N. No.") <> 10 then
                         Message('P.A.N. No. maximum 10 digit');
                 end;
+                // if "P.A.N. No." in ['A..Z'] then
+                // if "P.A.N. No." = "P.A.N. No." then
+                //     Error('Please check Pan no. is already use other Vendor');
                 if "P.A.N. No." <> '' then begin
                     vedorRec.Reset();
                     vedorRec.SetRange("P.A.N. No.", Rec."P.A.N. No.");

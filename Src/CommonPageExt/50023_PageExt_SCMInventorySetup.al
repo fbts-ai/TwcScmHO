@@ -75,6 +75,16 @@ pageextension 50023 SCMInventorySetup extends "Inventory Setup"
             {
                 ApplicationArea = all;
             }
+            field("Max. Quantity Percent"; Rec."Max. Quantity Percent")
+            {
+                ApplicationArea = All;
+                Caption = 'Max. Production Limit Percentage';
+            }
+            field("Min. Quantity Percent"; Rec."Min. Quantity Percent")
+            {
+                ApplicationArea = All;
+                Caption = 'Min. Production Limit Percentage';
+            }
 
 
         }

@@ -87,16 +87,12 @@ report 51112 "Purchase Invoice Report"
                 }
                 column(GSTAmt; GSTAmt)
                 {
-
                 }
-
-
-
                 trigger OnAfterGetRecord()
                 var
                 begin
                     Clear(Vendor);
-                    Vendor.GEt("Purchase Line"."Buy-from Vendor No.");
+                    //Vendor.GEt("Purchase Line"."Buy-from Vendor No.");
                     ValueCheck := '';
                     IF ("Purchase Line".Quantity <> "Purchase Line"."PI Qty.") OR ("Purchase Line"."Direct Unit Cost" <> "Purchase Line"."GRN Rate") then
                         ValueCheck := 'False'

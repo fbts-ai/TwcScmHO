@@ -62,6 +62,18 @@ tableextension 50008 Itemcard extends Item
         {
             Caption = 'Send to AP';
         }
+        field(50111; "Open PO Qty."; Decimal) //PT-FBTS
+        {
+            caption = 'Open PO Qty.';
+            FieldClass = FlowField;
+            AccessByPermission = TableData "Purch. Rcpt. Header" = R;
+            CalcFormula = Sum("Purchase Line"."Outstanding Qty. (Base)" WHERE("Document Type" = CONST(Order),
+         Type = CONST(Item), "No." = FIELD("No."), "Short Close" = filter(false), "Shortcut Dimension 1 Code" = FIELD("Global Dimension 1 Filter"),
+        "Shortcut Dimension 2 Code" = FIELD("Global Dimension 2 Filter"), "Location Code" = FIELD("Location Filter"),
+        "Drop Shipment" = FIELD("Drop Shipment Filter"), "Variant Code" = FIELD("Variant Filter"), "Expected Receipt Date" = FIELD("Date Filter"),
+                                                                               "Unit of Measure Code" = FIELD("Unit of Measure Filter")));
+
+        }
     }
 
     var
