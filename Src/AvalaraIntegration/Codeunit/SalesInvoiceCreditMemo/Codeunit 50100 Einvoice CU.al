@@ -1280,6 +1280,7 @@ codeunit 50107 "Einvoice CU"
         CessAmt: Text;
         Cessamount: Decimal;
         SLNo: Integer;
+        HSNASC: Record "HSN/SAC";
 
     begin
         CLEAR(ItemJson);
@@ -1297,9 +1298,19 @@ codeunit 50107 "Einvoice CU"
         IF TransferLine.FINDSET THEN
             REPEAT
                 IF UnitofMeasure.GET(TransferLine."Unit of Measure Code") THEN;
-                IsService := 'N';
-                IF RItem."HSN/SAC Code" = '6331' THEN //996331
-                    IsService := 'Y';
+                // IsService := 'N';
+                // IF RItem."HSN/SAC Code" = '996331' THEN //996331
+                //     IsService := 'Y';
+
+                HSNASC.Reset();
+                HSNASC.SetRange(code, TransferLine."HSN/SAC Code");
+                if HSNASC.FindFirst() then begin
+                    if HSNASC.Type = HSNASC.Type::SAC then
+                        IsService := 'Y';
+                    if HSNASC.Type = HSNASC.Type::HSN then
+                        IsService := 'N';
+                end;
+
                 RItem.GET(TransferLine."Item No.");
                 HSN := RItem."HSN/SAC Code"; //Temp to clear pending invoices
                                              //ELSE //Temp Comment
