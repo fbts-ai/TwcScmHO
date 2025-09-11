@@ -3,6 +3,25 @@ pageextension 50062 ReleaseProudctionOrderExt extends "Released Production Order
     layout
     {
         // Add changes to page layout here
+
+
+        modify(Quantity)
+        {
+            trigger OnAfterValidate()
+            var
+                ReleaseProdOrderRec: Record "Production Order";
+            begin
+                ReleaseProdOrderRec.Reset();
+                ReleaseProdOrderRec.SetRange("Source No.", Rec."Source No.");
+                ReleaseProdOrderRec.SetRange("Creation Date", Rec."Creation Date");
+                ReleaseProdOrderRec.SetRange(Quantity, Rec.Quantity);
+                if ReleaseProdOrderRec.FindFirst() then begin
+                    repeat
+                        Message('Already Created the Production Order with same Qty.');
+                    until ReleaseProdOrderRec.Next() = 0;
+                end;
+            end;
+        }
         modify(Posting)//PT-FBTS
         {
             Editable = false;

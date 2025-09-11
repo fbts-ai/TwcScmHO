@@ -429,6 +429,8 @@ page 50144 "Indent FA Processing Page"
     // CreateTransferLines -RKAlle28Nov2023 <Start>
     local procedure CreateTransferLines(var TransferHeader: Record "Transfer Header"; IndentHDR: Record IndentHeader)
     var
+        GSTPer: Decimal;//PT-FBTS 18-08-2025
+        BookvalueGST: Decimal;
         IndentLine: Record Indentline;
         transline: Record "Transfer Line";
         transline2: Record "Transfer Line";
@@ -448,6 +450,8 @@ page 50144 "Indent FA Processing Page"
         FAIndentHdr: Record IndentHeader;
         FADepreciationBook: Record "FA Depreciation Book";
     begin
+        Clear(BookvalueGST);
+        Clear(GSTPer);
         IndentLine.Reset();
         IndentLine.SetRange("DocumentNo.", IndentHDR."No.");
         if IndentLine.FindSet() then begin
@@ -541,14 +545,21 @@ page 50144 "Indent FA Processing Page"
                                                                                   //transline."GST Credit" := FARec2."GST Credit";oldcode//PT-FBTS
                         transline.Validate("GST Credit", FARec2."GST Credit");//PT-FBTS 19-06-2-24
                         transline.Description := FARec2.Description;
+                        Evaluate(GSTPer, FARec2."GST Group Code");
                         //if FADepreciationBook.Get(FARNo) then
                         FADepreciationBook.SetRange("FA No.", FARNo);
                         if FADepreciationBook.FindFirst() then
                             FADepreciationBook.CalcFields("Book Value");
+                        BookvalueGST := Round(FADepreciationBook."Book Value" / (100 + GSTPer) * 100);
                         //transline.Amount := FADepreciationBook."Book Value";oldcode//PT-FBTS-19-06-2-24
-                        transline.Validate(Amount, FADepreciationBook."Book Value");//PT-FBTS-19-06-2-24
+                        //transline.Validate(Amount, FADepreciationBook."Book Value");//PT-FBTS-19-06-2-24////old code icommPT-FBTS-10-09-2025
                         // transline."Transfer Price" := FADepreciationBook."Book Value";oldcode//PT-FBTS-19-06-2-24
-                        transline.Validate("Transfer Price", FADepreciationBook."Book Value");//PT-FBTS -19-06-2-24
+                        if GSTPer <> 0 then//PT-FBTS-10-09-2025
+                            transline.Validate("Transfer Price", BookvalueGST)
+                        else
+                            transline."Transfer Price" := FADepreciationBook."Book Value";
+                        //PT-FBTS-10-09-2025
+                        //transline.Validate("Transfer Price", FADepreciationBook."Book Value");//PT-FBTS -19-06-2-24 ////oldcode i commentPT-FBTS-10-09-2025
                         transline.Modify();
                     end;
                 end;

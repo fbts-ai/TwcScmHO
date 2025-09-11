@@ -99,6 +99,8 @@ pageextension 50023 SCMInventorySetup extends "Inventory Setup"
             {
                 Caption = 'Stock Audit No.';
             }
+            field(ConsumptionEntryNo; Rec.ConsumptionEntryNo)
+            { ApplicationArea = all; }
             field(OfflineSalesNoSeries; rec.OfflineSalesNoSeries)
             {
                 Caption = 'Offline Sales No Series';

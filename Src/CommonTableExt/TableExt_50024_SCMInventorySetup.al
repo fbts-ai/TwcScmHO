@@ -162,6 +162,13 @@ tableextension 50024 SCMInventorySetupExt extends "Inventory Setup"
         {
             DataClassification = ToBeClassified;
         }
+        field(50126; ConsumptionEntryNo; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Replacement&Dialling No.';
+            TableRelation = "No. Series";
+
+        }
 
     }
 

@@ -47,8 +47,12 @@ tableextension 50007 TransLine extends "Transfer Line"
                 ForupdateFA: Record "Fixed Asset";
                 ForupdateFA2: Record "Fixed Asset";
                 FADepreciationBook: Record "FA Depreciation Book";
+                BookvalueGST: Decimal;
+                GSTPer: Integer;
 
             Begin
+                Clear(BookvalueGST);
+                Clear(GSTPer);
                 //TodayFixedasset
                 if ForupdateFA2.Get(FixedAssetNo) then
                     rec."Parent Fixed Asset" := ForupdateFA2."Parent Fixed Asset";
@@ -57,10 +61,19 @@ tableextension 50007 TransLine extends "Transfer Line"
                 FADepreciationBook.SetRange("FA No.", FixedAssetNo);
                 if FADepreciationBook.FindFirst() then
                     FADepreciationBook.CalcFields("Book Value");
-                rec.Amount := FADepreciationBook."Book Value";
-                rec."Transfer Price" := FADepreciationBook."Book Value";
-                rec.Description := ForupdateFA2.Description;
-                rec.Modify();
+                Evaluate(GSTPer, ForupdateFA2."GST Group Code");//PT-FBTS-10-09-2025
+                BookvalueGST := Round(FADepreciationBook."Book Value" / (100 + GSTPer) * 100);
+                // rec.Amount := FADepreciationBook."Book Value";//PT-FBTS-10-09-2025//Old code
+                // rec."Transfer Price" := FADepreciationBook."Book Value";//PT-FBTS-10-09-2025-old code
+                // rec.Description := ForupdateFA2.Description;PT-FBTS-10-09-2025-old code
+                if GSTPer <> 0 then
+                    rec.Validate("Transfer Price", BookvalueGST)
+                else begin
+                    rec."Transfer Price" := FADepreciationBook."Book Value";
+                    rec.Description := ForupdateFA2.Description;
+                    //PT-FBTS-10-09-2025
+                    rec.Modify();
+                end;
                 // //AJ_ALLE_02012024
                 LastFANo := '';
                 if xRec.FixedAssetNo <> '' then begin

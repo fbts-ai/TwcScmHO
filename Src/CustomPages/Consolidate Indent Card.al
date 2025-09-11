@@ -206,6 +206,7 @@ page 50161 "Consolidate Indent Card"
                             TransferLine.Validate("Unit of Measure Code", IndentLine.UOM);
                             TransferLine.Validate(Quantity, IndentLine.Quantity);
                             TransferLine.Insert(true);
+                            TransferLine.Validate("Transfer Price");//Aashish 10-09-2025
                             //IndentLine."Referance No." := NewNo;
                             IndentLine."Referance No." := LastTransNo;
                             IndentLine.Modify();
