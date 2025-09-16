@@ -1700,6 +1700,9 @@ End Function
         <Field Name="Direct_Unit_CostFormat">
           <DataField>Direct_Unit_CostFormat</DataField>
         </Field>
+        <Field Name="Unit_of_Measure_Code">
+          <DataField>Unit_of_Measure_Code</DataField>
+        </Field>
         <Field Name="Order_No_">
           <DataField>Order_No_</DataField>
         </Field>

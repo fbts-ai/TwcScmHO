@@ -48,6 +48,8 @@ Report 50175 "Qty Recvd Not Invoiced"
             {
 
             }
+            column(Unit_of_Measure_Code; "Unit of Measure Code")
+            { }
             column(Order_No_; "Order No.") { }
             column(DocumentNo_PurchRcptLine; "Purch. Rcpt. Line"."Document No.")
             {
@@ -76,6 +78,7 @@ Report 50175 "Qty Recvd Not Invoiced"
             {
 
             }
+
             trigger OnAfterGetRecord()
             begin
                 Clear(PurchRcptHeader);

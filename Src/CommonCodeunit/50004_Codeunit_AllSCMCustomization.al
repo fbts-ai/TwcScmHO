@@ -2,6 +2,23 @@ codeunit 50004 AllSCMCustomization
 {
     EventSubscriberInstance = StaticAutomatic;
 
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post Shipment", OnBeforeInsertTransShptHeader, '', false, false)]
+    local procedure "TransferOrder-Post Shipment_OnBeforeInsertTransShptHeader"(var TransShptHeader: Record "Transfer Shipment Header"; TransHeader: Record "Transfer Header"; CommitIsSuppressed: Boolean)
+    var   //PT-FBTS 16-09-25
+        TranLine: Record "Transfer Line";
+    begin
+        TranLine.Reset();
+        TranLine.SetRange("Document No.", TransHeader."No.");
+        TranLine.SetRange("Unit of Measure Code", '');
+        if TranLine.FindSet() then begin
+            Error('Please check TransferLine Uom is blank%1', TranLine."Item No.");
+
+
+        end;
+    end;
+
+
     ///Related to item band name flow from Lot tracking to item ledger entry
     [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyTrackingFromSpec', '', true, true)]
     local procedure RunOnAfterCopyTrackingFromSpec(var ItemJournalLine: Record "Item Journal Line"; TrackingSpecification: Record "Tracking Specification")

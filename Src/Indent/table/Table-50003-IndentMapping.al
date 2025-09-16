@@ -41,6 +41,21 @@ table 50003 "Indent Mapping"
         {
             // OptionCaption = '', "Transfer", "Purchase", "Production";
             OptionMembers = " ","Transfer","Purchase","Production";
+            trigger OnValidate()
+            var
+                ItemRec: Record Item;
+            begin
+                if (Rec."Sourcing Method" = Rec."Sourcing Method"::Transfer) then begin //PT-FBTS-16-09-2025
+                    if ItemRec.Get(Rec."Item No.") then
+                        if ItemRec."Indent Unit of Measure" = '' then
+                            Error('Indent unit of Measure is not defined%1..%2', rec."Item No.", 'Please contect Administrator');
+                end;
+                if (Rec."Sourcing Method" = Rec."Sourcing Method"::Purchase) then begin //PT-FBTS-16-09-2025
+                    if ItemRec.Get(Rec."Item No.") then
+                        if ItemRec."Indent Unit of Measure" = '' then
+                            Error('Purch. unit of Measure is not defined%1..%2', rec."Item No.", 'Please contect Administrator');
+                end;
+            end;
 
         }
         field(7; "Source Location No."; Code[20])

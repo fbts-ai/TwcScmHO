@@ -158,6 +158,16 @@ page 50073 WastageEntryCard
                     TempWastageEntryLineForlot: Record WastageEntryLine;
 
                 begin
+                    begin
+                        CheckPostingDateAllowed(Rec);//PT-FBTS
+                        TestField(Status, Status::Open);//PT-FBTS 16-09-2025
+                                                        //PT-FBTs 16-09-2025
+                        TempWastageEntryLine.Reset();
+                        TempWastageEntryLine.SetRange("DocumentNo.", "No.");
+                        if not TempWastageEntryLine.FindFirst() then
+                            Error('Please Create Wastage line');
+                    end;
+
                     /*
                     if (Rec."Posting date" < Rec."Created Date") then
                         Error('Posting Date should be grater than or equal to Created Date');
@@ -191,14 +201,14 @@ page 50073 WastageEntryCard
 
 
                     //ALLE_NICK_11/1/23_LotFix
-                    TempWastageEntryLineForlot.Reset();
-                    TempWastageEntryLineForlot.SetRange("DocumentNo.", Rec."No.");
-                    IF TempWastageEntryLineForlot.FindSet() then begin
-                        repeat
-                            QTYvalidate(TempWastageEntryLineForlot, rec."Posting date")
-                        until TempWastageEntryLineForlot.Next() = 0
+                    // TempWastageEntryLineForlot.Reset();
+                    // TempWastageEntryLineForlot.SetRange("DocumentNo.", Rec."No.");
+                    // IF TempWastageEntryLineForlot.FindSet() then begin
+                    //     repeat
+                    //         QTYvalidate(TempWastageEntryLineForlot, rec."Posting date")
+                    //     until TempWastageEntryLineForlot.Next() = 0
 
-                    end;
+                    // end;
 
                     TempWastageEntryLine.Reset();
                     TempWastageEntryLine.SetRange("DocumentNo.", Rec."No.");
@@ -207,8 +217,23 @@ page 50073 WastageEntryCard
                         Error('Reason code must have value in Line No. %1', TempWastageEntryLine."LineNo.");
                     end;
 
+                    TempWastageEntryLine.Reset();
+                    TempWastageEntryLine.SetRange("DocumentNo.", Rec."No.");
+                    TempWastageEntryLine.SetFilter(Quantity, '%1', 0);
+                    IF TempWastageEntryLine.FindFirst() then begin
+                        Error('Please enter Quantity for. %1..%2', TempWastageEntryLine."Item Code", TempWastageEntryLine.Description);
+                    end;
+
                     IF Confirm('Are you sure to submit the Wastage Entry? You will not be able to modify after submitting.', true) then begin
                         IF Rec.Status = Rec.Status::Approved then begin
+                            TempWastageEntryLineForlot.Reset();
+                            TempWastageEntryLineForlot.SetRange("DocumentNo.", Rec."No.");
+                            IF TempWastageEntryLineForlot.FindSet() then begin
+                                repeat
+                                    QTYvalidate(TempWastageEntryLineForlot, rec."Posting date")
+                                until TempWastageEntryLineForlot.Next() = 0
+
+                            end;
                             InventSetup.Get();
                             ItemJournalTemplate := InventSetup.WastageEntryTemplateName;
                             ItemJournalBatchName := InventSetup.WastageEntryBatchName;
@@ -583,6 +608,13 @@ page 50073 WastageEntryCard
                     ItmJounNew1: Record 83;
                     Reserveration: Record "Reservation Entry";
                 begin
+                    CheckPostingDateAllowed(Rec);//PT-FBTS-16-09-2025
+                    TestField(Status, Status::Open);//PT-FBTs 16-09-2025
+
+                    TempWastageEntryLine.Reset();
+                    TempWastageEntryLine.SetRange("DocumentNo.", "No.");
+                    if not TempWastageEntryLine.FindFirst() then
+                        Error('Please Create Wastage line');
                     /*
                     if (Rec."Posting date" < Rec."Created Date") then
                         Error('Posting Date should be grater than or equal to Created Date');
@@ -622,14 +654,22 @@ page 50073 WastageEntryCard
                     IF TempWastageEntryLine.FindFirst() then begin
                         Error('Reason code must have value in Line No. %1', TempWastageEntryLine."LineNo.");
                     end;
-                    //ALLE_NICK_11/1/23_LotFix
-                    TempWastageEntryLineForlot.Reset();
-                    TempWastageEntryLineForlot.SetRange("DocumentNo.", Rec."No.");
-                    IF TempWastageEntryLineForlot.FindSet() then begin
-                        repeat
-                            QTYvalidate(TempWastageEntryLineForlot, rec."Posting date")
-                        until TempWastageEntryLineForlot.Next() = 0
+
+
+                    TempWastageEntryLine.Reset();
+                    TempWastageEntryLine.SetRange("DocumentNo.", Rec."No.");
+                    TempWastageEntryLine.SetFilter(Quantity, '%1', 0);
+                    IF TempWastageEntryLine.FindFirst() then begin
+                        Error('Please enter Quantity for. %1..%2', TempWastageEntryLine."Item Code", TempWastageEntryLine.Description);
                     end;
+                    //ALLE_NICK_11/1/23_LotFix
+                    // TempWastageEntryLineForlot.Reset();//Old Code comment //16-09-26
+                    // TempWastageEntryLineForlot.SetRange("DocumentNo.", Rec."No.");
+                    // IF TempWastageEntryLineForlot.FindSet() then begin
+                    //     repeat
+                    //         QTYvalidate(TempWastageEntryLineForlot, rec."Posting date")
+                    //     until TempWastageEntryLineForlot.Next() = 0
+                    // end;//Old Code comment //16-09-26
                     IF NOT tempusersetup.SkipEODValidation then begin
                         TempTransactionHeader.Reset();
                         TempTransactionHeader.SetRange(TempTransactionHeader.Date, Rec."Posting date");
@@ -645,7 +685,13 @@ page 50073 WastageEntryCard
                     totalPercentageValue := 0;
                     IF Confirm('Do you want to submit this order for approval?', true) then begin
                         IF Rec.Status = Rec.Status::Open then begin
-
+                            TempWastageEntryLineForlot.Reset(); //adding hear//PT-FBTS-16-9-25
+                            TempWastageEntryLineForlot.SetRange("DocumentNo.", Rec."No.");
+                            IF TempWastageEntryLineForlot.FindSet() then begin
+                                repeat
+                                    QTYvalidate(TempWastageEntryLineForlot, rec."Posting date")
+                                until TempWastageEntryLineForlot.Next() = 0
+                            end;//adding hear//PT-FBTS-16-9-25
                             totalWastageLine.Reset();
                             totalWastageLine.SetRange(totalWastageLine."DocumentNo.", rec."No.");
                             IF totalWastageLine.FindSet() then
@@ -1158,11 +1204,35 @@ page 50073 WastageEntryCard
                     CreateIJL(WastageLine, Postingdate, AssingQty);
                 end
                 else
-                    Error('Inventory is not avaliable for this Item, please reduce a qty for Item No %1', WastageLine."Item Code");
+                    Error('You have insufficient inventory of %1', WastageLine."Item Code");//PT-FBTS-16-0925
+                                                                                            //Error('Inventory is not avaliable for this Item, please reduce a qty for Item No %1', WastageLine."Item Code");
         end;
 
 
     end;
+
+    procedure CheckPostingDateAllowed(WastageHeader: Record WastageEntryHeader)
+    var
+        UserSetup: Record "User Setup";
+        LocationRec: Record Location;
+    begin
+        // Step 1: Get User Setup
+        if UserSetup.Get(UserId) then;
+
+        if (UserSetup."Allow Posting From" <> 0D) and
+           (WastageHeader."Posting date" < UserSetup."Allow Posting From") then
+            Error(
+              'Posting Date %1 is before the allowed posting date %2',
+              WastageHeader."Posting date", UserSetup."Allow Posting From");
+
+
+        if (UserSetup."Allow Posting To" <> 0D) and
+           (WastageHeader."Posting date" > UserSetup."Allow Posting To") then
+            Error(
+              'Posting Date %1 is after the allowed posting date %2',
+              WastageHeader."Posting date", UserSetup."Allow Posting To", UserSetup."Location Code");
+    end;
+
 
     local procedure CreateIJL(WASTAGELINE: Record WastageEntryLine; DTLocal: Text; Qty: Decimal)
     var

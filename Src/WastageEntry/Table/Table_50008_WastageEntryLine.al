@@ -82,6 +82,8 @@ table 50008 WastageEntryLine
 
             trigger OnValidate()
             begin
+                TestField("Item Code");//Aashish 05-09-2025
+
                 if Rec.Quantity < 0 then
                     Error('Quantity must be postive for Wastage entry');
 

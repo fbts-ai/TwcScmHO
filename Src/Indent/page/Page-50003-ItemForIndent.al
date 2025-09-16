@@ -61,7 +61,24 @@ page 50003 "Indent Item"
                         Item: Record Item;
                         IndentMappingsetup: Record "Indent Mapping";
                         usersetup: Record "User Setup";
+                        item1: Record Item;
+                        OrderMultiple: Integer;
+
                     begin
+
+                        //PT-FBTS 16-09-25 New
+                        if item1.Get("Item No.") then begin
+                            OrderMultiple := item1."Order Multiple";
+
+                            if OrderMultiple <> 0 then begin
+                                if ROUND("Indent Qty" / OrderMultiple, 1) <> ("Indent Qty" / OrderMultiple) then
+                                    Error('Quantity for this item must be a multiple of %1.', OrderMultiple);
+                            end;
+                        end;
+                        //PT-FBTS 16-09-25 End
+
+
+
                         IF usersetup.Get(UserId) then;
                         IndentMappingsetup.Reset();
                         IndentMappingsetup.SetRange("Location Code", usersetup."Location Code");
@@ -74,6 +91,9 @@ page 50003 "Indent Item"
                             IF Item.IsFixedAssetItem then
                                 Rec.TestField("Indent Qty", 1);
                         end;
+                        Rec.CalcFields("Indent Unit of Measure"); //PT-FBTS 16-09-2025
+                        if Rec."Indent Unit of Measure" = '' then
+                            Error('"Indent Unit of Measure is not defined for Item%1..%2', rec."Item No.", 'Please contact administrator');
 
 
                     end;
@@ -116,6 +136,9 @@ page 50003 "Indent Item"
                     indent: page IndentCard;
                     Item: Record Item;
                 begin
+                    Rec.CalcFields("Indent Unit of Measure"); //PT-FBTS 16-09-2025
+                    if Rec."Indent Unit of Measure" = '' then
+                        Error('"Indent Unit of Measure is not defined for Item%1..%2', rec."Item No.", 'Please contact administrator');
                     IndentHeader.Reset(); //PT-FBTS -07-08-2024
                     IndentHeader.SetRange("No.", rec."Indent No.");
                     if IndentHeader.FindFirst() then begin
