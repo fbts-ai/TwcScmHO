@@ -53,7 +53,7 @@ tableextension 50002 Store_Extn extends "LSC Store"
 
         }
         //chetna_24_09_2024
-        field(50120; "Custom BOM Group Code"; Code[20])
+        field(50131; "Custom BOM Group Code"; Code[20])
         {
             DataClassification = ToBeClassified;
         }

@@ -3,6 +3,11 @@ pageextension 50062 ReleaseProudctionOrderExt extends "Released Production Order
     layout
     {
         // Add changes to page layout here
+        addafter(Blocked)
+        {
+            field(ShortCloseRemarks; ShortCloseRemarks)
+            { ApplicationArea = all; }//PT-FBTS-1-
+        }
 
 
         modify(Quantity)
@@ -109,6 +114,34 @@ pageextension 50062 ReleaseProudctionOrderExt extends "Released Production Order
                 //     Error('ABCE');
             end;
             //PT-FBTS 16-10-24
+        }
+        addafter("Change &Status")
+        {
+            action("Short Close")
+            {
+                ApplicationArea = all;
+                PromotedCategory = Process;
+                Promoted = true;
+                PromotedIsBig = true;
+                trigger OnAction()
+                var
+                    myInt: Integer;
+                begin
+
+                    //PT-FBTS 10-09-2025
+                    ProdOrderLine.Reset();
+                    ProdOrderLine.SetRange("Prod. Order No.", Rec."No.");
+                    ProdOrderLine.SetFilter("Finished Quantity", '<>%1', 0);
+                    if ProdOrderLine.FindFirst() then
+                        Error('Finished Qty is Updated You Cannot Short Close this order %1', ProdOrderLine."Item No.");
+                    //PT-FBTS 10-09-2025
+                    Rec.TestField(ShortCloseRemarks);
+                    rec.Shortclose := true;
+                    rec.Modify();
+
+                end;
+            }
+
         }
     }
     var

@@ -30,9 +30,11 @@ pageextension 50076 SalesOrderSubform extends "Sales Order Subform" ///PT-FBTS
         {
             trigger OnAfterValidate()
             begin
-                if Rec.Quantity > GetQtyIHandValue() then //*** PT-FBTS 
-                    Error('Quantity Should be less or equal to Quantity in Hand.');
-                CurrPage.Update();
+                if Rec.Type = Rec.Type::Item then begin //PT-FBTS-24-09-25
+                    if Rec.Quantity > GetQtyIHandValue() then //*** PT-FBTS 
+                        Error('Quantity Should be less or equal to Quantity in Hand.');
+                    CurrPage.Update();
+                end;
             end;
         }
     }

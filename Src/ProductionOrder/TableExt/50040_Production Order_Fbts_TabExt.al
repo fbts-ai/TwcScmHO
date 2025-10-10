@@ -3,7 +3,12 @@ tableextension 50065 Production extends "Production Order"
     fields
     {
         // Add changes to table fields here
-
+        field(50000; Shortclose; Boolean) //PT-FBTS-10-09-2025
+        {
+            Caption = 'Short Close';
+        }
+        field(50001; ShortCloseRemarks; Text[100]) { }
+        //PT-FBTS-10-09-2025
     }
 
     keys

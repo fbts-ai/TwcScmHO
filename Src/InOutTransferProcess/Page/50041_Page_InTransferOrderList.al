@@ -88,10 +88,16 @@ page 50041 "InTransferOrderList"
         rec.SetRange(Hide, false);
         //AJ_Alle_04122023
         Rec.FilterGroup(2);
+        // Rec.SetRange(Rec."Transfer-to Code", UserSetupRec."Location Code");
+        // Rec.SetRange(Rec.Status, Rec.Status::Released);
+        // rec.SetRange("PARTIAL Received",false); //ALLE_NICK_220224
+        // Rec.SetFilter(Rec."Last Shipment No.", '<>%1', ''); //Mahendra adedd 14 Aug
         Rec.SetRange(Rec."Transfer-to Code", UserSetupRec."Location Code");
         Rec.SetRange(Rec.Status, Rec.Status::Released);
-        rec.SetRange("PARTIAL Received",false); //ALLE_NICK_220224
+        Rec.SetFilter(rec."Posting Date", '>%1', 20250401D);
+        // rec.SetRange("PARTIAL Received",false); //ALLE_NICK_220224 //PT-FBTS-18-09-25
         Rec.SetFilter(Rec."Last Shipment No.", '<>%1', ''); //Mahendra adedd 14 Aug
+        rec.SetRange(IntransitExist, true);
         Rec.FilterGroup(0);
 
         //AJ_Alle_09252023

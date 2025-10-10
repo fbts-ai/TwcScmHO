@@ -156,6 +156,11 @@ tableextension 50023 CommonUserSetupExt extends "User Setup"
             DataClassification = ToBeClassified;
 
         }
+        field(50175; "Short Close Prod."; Boolean) //PT-FBTS 10-09-25
+        {
+            DataClassification = ToBeClassified;
+
+        }
         field(50145; "Is Admin"; Boolean)
         {
             DataClassification = ToBeClassified;

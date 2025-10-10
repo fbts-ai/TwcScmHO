@@ -2551,6 +2551,7 @@ codeunit 50107 "Einvoice CU"
         SGST_lDecPer: Decimal;
         DetailedGST: Record "Detailed GST Ledger Entry";
         UOM: Code[20];
+        GstGroup: Record "GST Group";
         GlAcc: Record 15;
     begin
         CLEAR(ItemJson);
@@ -2586,9 +2587,10 @@ codeunit 50107 "Einvoice CU"
                     Evaluate(CGST_lDecPer, CGST_lPer);
                 IF SGST_lPer <> '0' then
                     Evaluate(SGST_lDecPer, SGST_lPer);
+                if GstGroup.Get(SalesLine."GST Group Code") then
 
-
-                GSTRate := IGST_lDecPer + SGST_lDecPer + CGST_lDecPer;
+                    //GSTRate := IGST_lDecPer + SGST_lDecPer + CGST_lDecPer;
+                    GSTRate := GstGroup."GST Rate";
                 // Message('%1', GSTRate);
 
                 IF UnitofMeasure.GET(SalesLine."Unit of Measure Code") THEN;
@@ -2758,8 +2760,8 @@ RecLineNo: Integer) ReturnValue: Text
             EinvoiceETransLog.MODIFY;
             //  Message('%1', EinvoiceETransLog."Invoice No.");
         end;
-        SalesHeader."QR Code" := EinvoiceETransLog."Einvoice QR Code";
-        SalesHeader.Modify();
+        // SalesHeader."QR Code" := EinvoiceETransLog."Einvoice QR Code";
+        // SalesHeader.Modify();
     end;
 
     local procedure SaleInvoice_EInvoiceLog(SalesHeader: Record "Sales Invoice Header"; Response: Text)

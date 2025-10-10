@@ -79,6 +79,10 @@ pageextension 50020 SCMUsersetup extends "User Setup"
             {
                 ApplicationArea = all;
             }
+            field("Short Close Prod."; "Short Close Prod.")//PT-FBTS-10-09-25
+            {
+                ApplicationArea = all;
+            }
             //NTCNFRM
             // field("Multiple Location Access"; rec."Multiple Location Access")
             // {

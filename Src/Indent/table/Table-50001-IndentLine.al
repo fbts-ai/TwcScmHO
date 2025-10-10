@@ -69,6 +69,7 @@ table 50001 Indentline
         {
             DataClassification = ToBeClassified;
             DecimalPlaces = 0 : 0;
+            Editable = false;
 
             trigger OnValidate()
             var

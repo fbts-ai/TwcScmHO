@@ -17,6 +17,7 @@ pageextension 50039 ReleaseProdOrdersExt extends "Released Production Orders"
         usersetup.Get(UserId);
         Rec.FilterGroup(2);
         Rec.SetFilter("Location Code", '=%1', usersetup."Location Code");
+        Rec.SetRange(Shortclose, false);
         Rec.FilterGroup(0);
     end;
 

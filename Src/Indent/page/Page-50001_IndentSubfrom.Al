@@ -111,7 +111,7 @@ page 50001 "Indent Line"
                 field(Quantity; Rec.Quantity)
                 {
                     ApplicationArea = all;
-                    Editable = EnableBool;//PT-FBTS 09-07-2024
+                    // Editable = false;//PT-FBTS 09-07-2024
                     trigger OnValidate()
                     var
                         Item: Record Item;

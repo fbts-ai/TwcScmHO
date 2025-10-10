@@ -22,7 +22,7 @@ tableextension 50053 PurchReceiptHeader extends "Purch. Rcpt. Header"
         }
         field(50108; VendorInvoiceNo; Code[35])
         {
-            Caption = 'Vendor Invoice Date';
+            Caption = 'Vendor Invoice No';
         }
         field(50109; "Creation Location"; code[20])
         {

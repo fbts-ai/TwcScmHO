@@ -78,6 +78,15 @@ tableextension 50022 TransferOrderSCMExt extends "Transfer Header"
             DataClassification = ToBeClassified;
             // OptionMembers = Open,Release,"Sent For Approval",Approved,Rejected;
         }
+        field(50006; "IntransitExist"; Boolean) //PT-FBTS 09-10-2025
+        {
+            CalcFormula = exist("Transfer Line" WHERE("Document No." = FIELD("No."),
+                                                                            "Qty. in Transit" = FILTER(> 0)));
+            Caption = 'IntransitExist';
+            Editable = false;
+            FieldClass = FlowField;
+
+        }
         //TodayQuarantine
         //AJ_ALLE_22012023
         //ALLE_NICK_130224-RSTN
