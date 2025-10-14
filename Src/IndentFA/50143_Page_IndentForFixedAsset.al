@@ -62,6 +62,7 @@ page 50143 "Indent Fixed Asset"
                         Item: Record Item;
                         IndentMappingsetup: Record "Indent Mapping";
                         usersetup: Record "User Setup";
+                        FAMaster: Record "Fixed Asset";
                     begin
                         IF usersetup.Get(UserId) then;
                         IndentMappingsetup.Reset();
@@ -70,6 +71,15 @@ page 50143 "Indent Fixed Asset"
                             IF "Indent Qty" < IndentMappingsetup."Min Qty." then
                                 Error('Indent qty cannot be less than minimum qty. defined under Indent Mapping Setup.');
                         end;
+
+                        //PT-FBTS 10-10-2025
+                        FAMaster.Reset();
+                        FAMaster.SetRange("No.", "Item No.");
+                        if FAMaster.FindFirst() then
+                            FAMaster.TestField("GST Group Code");
+                        FAMaster.TestField("HSN/SAC Code");
+                        FAMaster.TestField("GST Credit");
+                        //PT-FBTS  10-10-2025
 
                     end;
                 }

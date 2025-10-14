@@ -41,8 +41,45 @@ page 50161 "Consolidate Indent Card"
                 Enabled = EditBool;
                 trigger OnAction()
                 var
-                    myInt: Integer;
+                    ConsolidatedLine: Record "Consolidate indent Line";
                 begin
+                    if Rec."Delivery Date" = 0D then
+                        Error('Delivery Date must be defined to proceed ');
+                    ConsolidatedLine.Reset();
+                    ConsolidatedLine.SetRange(" Document No.", Rec."No.");
+                    if not ConsolidatedLine.FindFirst() then
+                        Error('No consolidated lines found for document %1.', Rec."No.");
+                    ConsolidatedLine.Reset();
+                    ConsolidatedLine.SetRange(" Document No.", Rec."No.");
+                    ConsolidatedLine.SetRange(Quantity, 0);
+                    if ConsolidatedLine.FindFirst() then
+                        Error('Quantity must be defined for%1..%2..%3', ConsolidatedLine."Item No", ConsolidatedLine."Item Name", ConsolidatedLine.Store);
+                    ConsolidatedLine.Reset();
+                    ConsolidatedLine.SetRange(" Document No.", Rec."No.");
+                    ConsolidatedLine.SetRange(UOM, '');
+                    if ConsolidatedLine.FindFirst() then
+                        Error('UOM must be defined for%1..%2..%3', ConsolidatedLine."Item No", ConsolidatedLine."Item Name", ConsolidatedLine.Store);
+
+                    ConsolidatedLine.Reset();
+                    ConsolidatedLine.SetRange(" Document No.", Rec."No.");
+                    ConsolidatedLine.SetRange(Store, '');
+                    if ConsolidatedLine.FindFirst() then
+                        Error('Store must be defined for%1..%2..%3..%4', ConsolidatedLine."Item No", ConsolidatedLine."Item Name", ConsolidatedLine.Quantity, ConsolidatedLine.UOM);
+
+                    ConsolidatedLine.Reset();
+                    ConsolidatedLine.SetRange(" Document No.", Rec."No.");
+                    ConsolidatedLine.SetRange("Sourcing Method", ConsolidatedLine."Sourcing Method"::" ");
+                    if ConsolidatedLine.FindFirst() then
+                        Error('  Sourcing Method must be defined for %1..%2..%3..%4', ConsolidatedLine."Item No", ConsolidatedLine."Item Name", ConsolidatedLine.Quantity, ConsolidatedLine.UOM);
+
+                    ConsolidatedLine.Reset();
+                    ConsolidatedLine.SetRange(" Document No.", Rec."No.");
+                    ConsolidatedLine.SetRange("Source Location No.", '');
+                    if ConsolidatedLine.FindFirst() then
+                        Error('Sourcing Location No. must be defined for  %1..%2..%3..%4', ConsolidatedLine."Item No", ConsolidatedLine."Item Name", ConsolidatedLine.Quantity, ConsolidatedLine.UOM);
+
+
+
                     CreateOrdersFromIndent(Rec."No.");
                 end;
             }
@@ -196,7 +233,7 @@ page 50161 "Consolidate Indent Card"
                                 LastTransNo := NewNo;
                                 LineNo := 10000;
 
-                                Message('Transfer Order %1 created from %2 to %3', NewNo, CurrentSource, CurrentStore);
+
                             end;
                             TransferLine.Init();
                             TransferLine."Document No." := LastTransNo;
@@ -211,7 +248,6 @@ page 50161 "Consolidate Indent Card"
                             IndentLine."Referance No." := LastTransNo;
                             IndentLine.Modify();
                         end;
-
 
                 end;
             until IndentLine.Next() = 0;
@@ -242,8 +278,3 @@ page 50161 "Consolidate Indent Card"
             EditBool := true;
     end;
 }
-
-
-
-
-

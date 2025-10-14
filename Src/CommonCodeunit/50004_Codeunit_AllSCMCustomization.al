@@ -10,13 +10,56 @@ codeunit 50004 AllSCMCustomization
     begin
         TranLine.Reset();
         TranLine.SetRange("Document No.", TransHeader."No.");
-        TranLine.SetRange("Unit of Measure Code", '');
+        TranLine.SetRange("Derived From Line No.", 0);
         if TranLine.FindSet() then begin
-            Error('Please check TransferLine Uom is blank%1', TranLine."Item No.");
+            repeat
+                if TranLine."Unit of Measure Code" = '' then
+                    Error('Please check TransferLine Uom is blank For this Item %1', TranLine."Item No.");
+                if TranLine."Unit of Measure Code" = '' then
+                    Error('Please check TransferLine Uom is blank for this item %1 ', TranLine."Item No.");
+                if TranLine."HSN/SAC Code" = '' then
+                    Error('Please Check HSN For this item %1 ', TranLine."Item No.");
+                if TranLine."GST Group Code" = '' then
+                    Error('Please Check GST Group Code For this item %1 ', TranLine."Item No.");
+                if TranLine."GST Credit" = TranLine."GST Credit"::" " then
+                    Error('Please Check GST Credit For this item %1 ', TranLine."Item No.");
 
 
+            until TranLine.Next() = 0;
+
+            TranLine.Reset();
+            TranLine.SetRange("Document No.", TransHeader."No.");
+            TranLine.SetRange("Unit of Measure Code", '');
+            if TranLine.FindSet() then begin
+                Error('Please check TransferLine Uom is blank%1', TranLine."Item No.");
+            end;
         end;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Transfer Document", OnBeforeReleaseTransferDoc, '', false, false)]
+    local procedure "Release Transfer Document_OnBeforeReleaseTransferDoc"(var TransferHeader: Record "Transfer Header")
+    var
+        TransferLine: Record "Transfer Line";
+    begin            ///PT-FBTS-13-10-25
+        TransferLine.Reset();
+        TransferLine.SetRange("Document No.", TransferHeader."No.");
+        TransferLine.SetRange("Derived From Line No.", 0);
+        if TransferLine.FindSet() then begin
+            repeat
+                if TransferLine."HSN/SAC Code" = '' then
+                    Error('Please Check HSN For this Item %1..%2 ', TransferLine."Item No.", TransferLine.Description);
+                if TransferLine."GST Group Code" = '' then
+                    Error('Please Check GST Group Code For  %1 ..%2 ', TransferLine."Item No.", TransferLine.Description);
+                if TransferLine."Transfer Price" = 0 then
+                    Error('Please Check Transfer Price For %1 ..%2 ', TransferLine."Item No.", TransferLine.Description);
+                if TransferLine.Amount = 0 then
+                    Error('Please Check Amount For %1 ..%2 ', TransferLine."Item No.", TransferLine.Description);
+                if TransferLine."GST Credit" = TransferLine."GST Credit"::" " then
+                    Error('Please Check GST Credit For this item %1..%2 ', TransferLine."Item No.");
+            until TransferLine.Next() = 0;
+        end;
+    end;
+
 
 
     ///Related to item band name flow from Lot tracking to item ledger entry

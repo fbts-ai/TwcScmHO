@@ -130,6 +130,9 @@ pageextension 50025 SCMPurchaseOrderLineSubform extends "Purchase Order Subform"
                 IF Type = Rec.Type::"Fixed Asset" then begin
                     TempFixedAsset.Reset();
                     TempFixedAsset.SetFilter("No.", '<>%1', '');
+                    TempFixedAsset.SetFilter("GST Group Code", '<>%1', ''); //PT-FBTS-27-09-2025
+                    TempFixedAsset.SetFilter("HSN/SAC Code", '<>%1', ''); //PT-FBTS27-09-2025
+                    TempFixedAsset.SetFilter("GST Credit", '<>%1', "GST Credit"::" ");
                     IF TempFixedAsset.FindSet() then;
 
                     // IF PAGE.RUNMODAL(0, TempFixedAsset) = ACTION::LookupOK THEN begin

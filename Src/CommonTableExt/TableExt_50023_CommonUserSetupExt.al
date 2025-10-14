@@ -272,6 +272,10 @@ tableextension 50023 CommonUserSetupExt extends "User Setup"
         {
             DataClassification = ToBeClassified;
         }
+        // field(50168; "ShortCloseProd."; Boolean) //PT-Fbts-260625
+        // {
+        //     DataClassification = ToBeClassified;
+        // }
         //AJ_ALLE_02102024
         //TodayQuarantine //AJ_ALLE_22012024 - open
         //AJ_ALLE_17012023

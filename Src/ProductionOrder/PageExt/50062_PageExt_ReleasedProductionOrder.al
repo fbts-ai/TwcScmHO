@@ -100,6 +100,7 @@ pageextension 50062 ReleaseProudctionOrderExt extends "Released Production Order
             var
                 myInt: Integer;
             begin
+
                 ProdOrderLine.Reset();
                 ProdOrderLine.SetRange("Prod. Order No.", Rec."No.");
                 ProdOrderLine.SetFilter("Finished Quantity", '=%1', 0);
@@ -126,8 +127,14 @@ pageextension 50062 ReleaseProudctionOrderExt extends "Released Production Order
                 trigger OnAction()
                 var
                     myInt: Integer;
+                    UserSetup: Record "User Setup";
                 begin
 
+                    if UserSetup.Get(UserId) then begin//PT-FBTS-10-10-25
+                        if not UserSetup."Short Close Prod." then
+                            Error('Do not have a Permission Please Contect your Administrator');
+                    end;
+                    //PT-FBTS-10-10-25
                     //PT-FBTS 10-09-2025
                     ProdOrderLine.Reset();
                     ProdOrderLine.SetRange("Prod. Order No.", Rec."No.");

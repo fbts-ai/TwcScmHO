@@ -20,11 +20,22 @@ page 50162 "Consolidate Indent Lines"
                     trigger OnValidate()
                     var
                         itemRec: Record Item;
+                        GLAcount: Record "G/L Account";
+                        fixedAsset: Record "Fixed Asset";
                     begin
                         if itemRec.Get(rec."Item No") then begin
                             Rec."Item Name" := itemRec.Description;
                             Rec.UOM := itemRec."Indent Unit of Measure";
-                        end;
+                        end else
+                            if GLAcount.Get(rec."Item No") then
+                                Rec."Item Name" := GLAcount.Name
+                            else
+                                if fixedAsset.Get(rec."Item No") then
+                                    Rec."Item Name" := fixedAsset.Description;
+
+
+
+
                     end;
                 }
                 field("Item Name"; Rec."Item Name")
@@ -34,13 +45,18 @@ page 50162 "Consolidate Indent Lines"
                 field("Quantity"; Rec."Quantity")
                 {
                 }
-                field("UOM"; Rec."UOM")
+                field("UOM"; Rec."UOM")//PT-FBTS-10/10/25
                 {
-                    TableRelation = "Item Unit of Measure".Code where("Item No." = field("Item No"));
+                    TableRelation = if (Type = const(Item)) "Item Unit of Measure".Code where("Item No." = field("Item No"))
+                    else
+                    if (Type = const("G/L Account")) "Unit of Measure"
+                    else
+                    if (Type = const("Fixed Assets")) "Unit of Measure";
                 }
                 field("Store"; Rec."Store")
                 {
-                    TableRelation = Location;
+
+
                 }////T64-NS
                 field("Sourcing Method"; rec."Sourcing Method")
                 {
