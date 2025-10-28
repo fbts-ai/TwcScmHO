@@ -10,6 +10,11 @@ pageextension 50118 VendorLedgerEntry extends "Vendor Ledger Entries"
                 ApplicationArea = all;
                 Editable = false;
             }
+            field("Vendor Bill No"; Rec."Vendor Bill No")
+            {
+                ApplicationArea = all;
+                // Editable = false;
+            }
         }
     }
 

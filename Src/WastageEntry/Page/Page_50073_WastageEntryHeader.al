@@ -160,8 +160,9 @@ page 50073 WastageEntryCard
                 begin
                     begin
                         CheckPostingDateAllowed(Rec);//PT-FBTS
-                        TestField(Status, Status::Open);//PT-FBTS 16-09-2025
-                                                        //PT-FBTs 16-09-2025
+                                                     // TestField(Status, Status::Open);//PT-FBTS 16-09-2025
+                        TestField(Status, Status::Approved);//PT-FBTS 15-10-2025
+                                                            //PT-FBTs 16-09-2025
                         TempWastageEntryLine.Reset();
                         TempWastageEntryLine.SetRange("DocumentNo.", "No.");
                         if not TempWastageEntryLine.FindFirst() then

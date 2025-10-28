@@ -7,6 +7,13 @@ tableextension 50117 Vendor_Ledger_Entry extends "Vendor Ledger Entry"
         {
 
         }
+
+        field(50001; "Vendor Bill No"; Code[20]) //PT-FBTS-28-10-25
+        {
+            FieldClass = FlowField;
+            Editable = false;
+            CalcFormula = lookup("Purch. Inv. Header"."Vendor Bill No." where("No." = field("Document No.")));
+        }
     }
 
     keys

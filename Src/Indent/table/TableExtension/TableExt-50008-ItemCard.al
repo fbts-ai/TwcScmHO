@@ -74,6 +74,8 @@ tableextension 50008 Itemcard extends Item
                                                                                "Unit of Measure Code" = FIELD("Unit of Measure Filter")));
 
         }
+        //field(50201; "Enable Manual Costing"; Boolean)
+        //{ } //FBTS AA
     }
 
     var

@@ -1018,6 +1018,23 @@ Page 50037 "Purchase Order GRN Subform"
         RecPurchLine: Record "Purchase Line";
         LineNum: Integer;
     begin
+        // PurchaseLine.Reset();
+        // PurchaseLine.SetRange("Document Type", PurchLine."Document Type");
+        // PurchaseLine.SetRange("Document No.", PurchLine."Document No.");
+        // If PurchaseLine.FindLast() then
+        //     LineNum := PurchaseLine."Line No." + 10000
+        // else
+        //     LineNum := 10000;
+
+        // RecPurchLine.Init();
+        // RecPurchLine.TransferFields(PurchLine);
+        // RecPurchLine.Validate("No.", F_Assest."No.");
+        // RecPurchLine.Validate("Line No.", LineNum);
+        // RecPurchLine.Validate("Location Code", PurchLine."Location Code");
+        // RecPurchLine.Validate(Quantity, 1);
+        // RecPurchLine.Validate("Direct Unit Cost", PurchLine."Direct Unit Cost");
+        // RecPurchLine.SelectforFixedAsset := false;
+        // RecPurchLine.Insert();
         PurchaseLine.Reset();
         PurchaseLine.SetRange("Document Type", PurchLine."Document Type");
         PurchaseLine.SetRange("Document No.", PurchLine."Document No.");
@@ -1030,11 +1047,15 @@ Page 50037 "Purchase Order GRN Subform"
         RecPurchLine.TransferFields(PurchLine);
         RecPurchLine.Validate("No.", F_Assest."No.");
         RecPurchLine.Validate("Line No.", LineNum);
+        RecPurchLine.Insert();//PT-FBTS-28-10-25
         RecPurchLine.Validate("Location Code", PurchLine."Location Code");
         RecPurchLine.Validate(Quantity, 1);
         RecPurchLine.Validate("Direct Unit Cost", PurchLine."Direct Unit Cost");
+        RecPurchLine.Validate("Shortcut Dimension 1 Code", PurchLine."Shortcut Dimension 1 Code");////PT-FBTS-28-10-25
+        RecPurchLine.Validate("Shortcut Dimension 2 Code", PurchLine."Shortcut Dimension 2 Code");////PT-FBTS-28-10-25
+        RecPurchLine.Validate("Dimension Set ID", PurchLine."Dimension Set ID");////PT-FBTS-28-10-25
         RecPurchLine.SelectforFixedAsset := false;
-        RecPurchLine.Insert();
+        RecPurchLine.Modify();//PT-FBTS-28-10-25
     end;
 
 

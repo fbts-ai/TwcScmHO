@@ -59,6 +59,42 @@ codeunit 50004 AllSCMCustomization
             until TransferLine.Next() = 0;
         end;
     end;
+    //////////////////////// FBTS AA
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnSetOrderAdjmtPropertiesOnBeforeSetCostIsAdjusted', '', false, false)]
+    local procedure "Item Jnl.-Post Line_OnSetOrderAdjmtPropertiesOnBeforeSetCostIsAdjusted"(
+           var InvtAdjmtEntryOrder: Record "Inventory Adjmt. Entry (Order)";
+       var ModifyOrderAdjmt: Boolean; var IsHandled: Boolean; OriginalPostingDate: Date)
+
+    begin
+
+        IsHandled := true;
+        InvtAdjmtEntryOrder."Cost adjusted Manual" := true;
+        InvtAdjmtEntryOrder."Cost is Adjusted" := true;
+        InvtAdjmtEntryOrder."Manual Closed-Open" := true;
+        ModifyOrderAdjmt := true;
+
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnSetOrderAdjmtPropertiesOnBeforeSetAllowOnlineAdjustment', '', false, false)]
+    local procedure "Item Jnl.-Post Line_OnSetOrderAdjmtPropertiesOnBeforeSetAllowOnlineAdjustment"(
+        var InvtAdjmtEntryOrder: Record "Inventory Adjmt. Entry (Order)";
+        var ModifyOrderAdjmt: Boolean; var IsHandled: Boolean; OriginalPostingDate: Date)
+
+    begin
+
+        IsHandled := true;
+        InvtAdjmtEntryOrder."Allow online Adjust Manual" := true;
+        InvtAdjmtEntryOrder."Allow Online Adjustment" := true;
+        ModifyOrderAdjmt := true;
+
+    END;
+    /////////////// FBTS AA
+
+
+
+
+
+
 
 
 
