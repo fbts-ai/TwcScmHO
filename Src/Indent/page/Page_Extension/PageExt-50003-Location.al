@@ -2,6 +2,11 @@ pageextension 50003 "Location Extension" extends "Location Card"
 {
     layout
     {
+        addafter("State Code")
+        {
+            field("State-IN"; "State-IN")
+            { ApplicationArea = all; }
+        }
         addafter("Address 2")
         {
             field("Transfer Location"; rec."Transfer Location")

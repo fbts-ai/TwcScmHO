@@ -59,6 +59,23 @@ tableextension 50002 Store_Extn extends "LSC Store"
         }
         //chetan_24_09_2024
 
+        field(50141; Authentication; text[200])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50142; "TransSalesEntry URL"; text[200])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50143; "Enable API Replication Check"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(501144; "Response Data"; Text[2048])
+        {
+            DataClassification = ToBeClassified;
+        }
+
     }
 
     var

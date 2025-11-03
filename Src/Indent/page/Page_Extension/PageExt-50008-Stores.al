@@ -34,6 +34,24 @@ pageextension 50008 StoresExtn extends "LSC Store Card"
             }
 
         }
+        addafter("Kitchen Printing")
+        {
+            group("Customer Details API")
+            {
+                field(Authentication; Authentication)
+                {
+                    ApplicationArea = All;
+                }
+                field("TransSalesEntry URL"; "TransSalesEntry URL")
+                {
+                    ApplicationArea = All;
+                }
+                field("Enable API Replication Check"; "Enable API Replication Check")
+                {
+                    ApplicationArea = All;
+                }
+            }
+        }
 
     }
 
