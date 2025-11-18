@@ -49,7 +49,17 @@ tableextension 50030 PurchReceiptExtension extends "Purch. Rcpt. Line"
 
 
     }
+    keys
+    {
+        key(Sec; "Buy-from Vendor No.", "No.", "Location Code", "Posting Date")
+        {
+            // Clustered = false;
+            SumIndexFields = "Direct Unit Cost";
+            MaintainSqlIndex = true;
+        }
+    }
 
     var
         myInt: Integer;
+
 }

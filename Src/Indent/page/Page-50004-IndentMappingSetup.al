@@ -160,6 +160,48 @@ page 50004 "Indent Mapping Setup"
         end;
     end;
 
+    trigger OnQueryClosePage(CloseAction: Action): Boolean
+    var
+        IndentMapp: Record "Indent Mapping";
+        ErrorText: Text;
+    begin
+        IndentMapp.Copy(Rec);
+        ErrorText := '';
+
+        if IndentMapp.FindSet() then
+            repeat
+                // Location Code
+                if IndentMapp."Location Code" = '' then
+                    ErrorText += StrSubstNo(
+                        'Location Code is blank. Item: %1\',
+                        IndentMapp."Item No.");
+
+                // Item No.
+                if IndentMapp."Item No." = '' then
+                    ErrorText += StrSubstNo(
+                        'Item No. is blank. Location: %1\',
+                        IndentMapp."Location Code");
+
+                // Sourcing Method
+                if IndentMapp."Sourcing Method" = IndentMapp."Sourcing Method"::" " then
+                    ErrorText += StrSubstNo(
+                        'Sourcing Method is blank. Location: %1  Item: %2\',
+                        IndentMapp."Location Code", IndentMapp."Item No.");
+
+                // Source Location No.
+                if IndentMapp."Source Location No." = '' then
+                    ErrorText += StrSubstNo(
+                        'Source Location No. is blank. Location: %1  Item: %2\',
+                        IndentMapp."Location Code", IndentMapp."Item No.");
+            until IndentMapp.Next() = 0;
+
+        // Show all errors together
+        if ErrorText <> '' then
+            Error('Please correct the following before closing:\' + ErrorText);
+
+        exit(true);
+    end;
+
     var
         FileName: Text[100];
         SheetName: Text[100];

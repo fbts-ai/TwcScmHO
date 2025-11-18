@@ -15,18 +15,17 @@ pageextension 50028 SCMFixedAssetCard extends "Fixed Asset Card"
                 ApplicationArea = All;
                 //ALLE_NICK_120124
                 //TodayFixedasset
-                trigger OnLookup(var Text: Text): Boolean
-                var
-                    FixedAsset1: Page "Fixed Asset List_";
-                    FixedAsset: Record "Fixed Asset";
+                // trigger OnLookup(var Text: Text): Boolean//PT-FBTS oldCode Comment  17-11-25
+                // var
+                //     FixedAsset1: Page "Fixed Asset List_";
+                //     FixedAsset: Record "Fixed Asset";
 
-                begin
-                    FixedAsset.SetFilter("PO Item", '%1', true);
-                    IF Page.RUNMODAL(50112, FixedAsset) = ACTION::LookupOK THEN begin
-                        Rec.Validate(Rec."Parent Fixed Asset", FixedAsset."No.");
-                    end;
-
-                end;
+                // begin
+                //     FixedAsset.SetFilter("PO Item", '%1', true);
+                //     IF Page.RUNMODAL(50112, FixedAsset) = ACTION::LookupOK THEN begin
+                //         Rec.Validate(Rec."Parent Fixed Asset", FixedAsset."No.");
+                //     end;
+                // end;
             }
             field("Location Code"; rec."Location Code")
             {

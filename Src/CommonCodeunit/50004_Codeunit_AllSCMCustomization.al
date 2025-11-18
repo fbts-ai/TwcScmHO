@@ -3,6 +3,36 @@ codeunit 50004 AllSCMCustomization
     EventSubscriberInstance = StaticAutomatic;
 
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", OnBeforePostPurchaseDoc, '', false, false)]
+    local procedure "Purch.-Post_OnBeforePostPurchaseDoc"(var Sender: Codeunit "Purch.-Post"; var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var HideProgressWindow: Boolean; var ItemJnlPostLine: Codeunit "Item Jnl.-Post Line"; var IsHandled: Boolean)
+    var
+        PurchaseLine: Record "Purchase Line";  //PT-FBTS-18-11-25
+    begin
+        PurchaseHeader.TestField("Location Code");
+        PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+        PurchaseLine.SetFilter(Type, '<>%1', PurchaseLine.Type::" ");
+        if PurchaseLine.FindSet() then begin
+            if (PurchaseLine."Location Code" <> PurchaseHeader."Location Code") or (PurchaseLine."Location Code" = '') then begin
+                Error('Location mentioned in Header and Line do not match');
+            end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", OnBeforeReleasePurchaseDoc, '', false, false)]
+    local procedure "Release Purchase Document_OnBeforeReleasePurchaseDoc"(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; var SkipCheckReleaseRestrictions: Boolean; var IsHandled: Boolean)
+    var
+        PurchaseLine: Record "Purchase Line";  //PT-FBTS-18-11-25
+    begin
+        PurchaseHeader.TestField("Location Code");
+        PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+        PurchaseLine.SetFilter(Type, '<>%1', PurchaseLine.Type::" ");
+        if PurchaseLine.FindSet() then begin
+            if (PurchaseLine."Location Code" <> PurchaseHeader."Location Code") or (PurchaseLine."Location Code" = '') then begin
+                Error('Location mentioned in Header and Line do not match');
+            end;
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post Shipment", OnBeforeInsertTransShptHeader, '', false, false)]
     local procedure "TransferOrder-Post Shipment_OnBeforeInsertTransShptHeader"(var TransShptHeader: Record "Transfer Shipment Header"; TransHeader: Record "Transfer Header"; CommitIsSuppressed: Boolean)
     var   //PT-FBTS 16-09-25

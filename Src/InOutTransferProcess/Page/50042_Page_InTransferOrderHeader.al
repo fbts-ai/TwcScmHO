@@ -23,6 +23,7 @@ page 50042 "In Transfer Order"
                     ToolTip = 'Specifies the number of the involved entry or record, according to the specified number series.';
                     Visible = DocNoVisible;
 
+
                     trigger OnAssistEdit()
                     begin
                         if AssistEdit(xRec) then

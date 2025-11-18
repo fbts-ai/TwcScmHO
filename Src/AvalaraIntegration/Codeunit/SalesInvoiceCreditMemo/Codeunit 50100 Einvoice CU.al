@@ -206,7 +206,7 @@ codeunit 50107 "Einvoice CU"
         ItemDetails := EwayGetItemDetails(TH);
         SellerStore.GET(TH."Transfer-from Code");
         State.RESET;
-        State.SETRANGE(Code, SellerStore."State Code");
+        State.SETRANGE(Code, SellerStore."State Code"); //State-IN 
         IF State.FINDFIRST THEN
             StoreStateCode := State."State Code (Einvoice)";
         BuyerStore.GET(TH."Transfer-to Code");
@@ -878,12 +878,12 @@ codeunit 50107 "Einvoice CU"
         ItemDetails := GetItemDetails(TH);
         SellerStore.GET(TH."Transfer-from Code");
         State.RESET;
-        State.SETRANGE(Code, SellerStore."State-IN");
+        State.SETRANGE(Code, SellerStore."State Code");
         IF State.FINDFIRST THEN
             StoreStateCode := State."State Code (Einvoice)";
         BuyerStore.GET(TH."Transfer-to Code");
         State.RESET;
-        State.SETRANGE(Code, BuyerStore."State-IN");
+        State.SETRANGE(Code, BuyerStore."State Code");
         IF State.FINDFIRST THEN
             CustomerStateCode := State."State Code (Einvoice)";
         CLEAR(TrTOPIN);
@@ -2024,7 +2024,7 @@ codeunit 50107 "Einvoice CU"
         ItemDetails := SaleInvoice_GetItemDetails(SH);
         Clear(StoreStateCode);
         State.RESET;
-        State.SETRANGE(Code, Store."State-IN");
+        State.SETRANGE(Code, Store."State Code");
         IF State.FINDFIRST THEN begin
             if State."State Code (Einvoice)" = 'CRT' then
                 StoreStateCode := 'NOS'

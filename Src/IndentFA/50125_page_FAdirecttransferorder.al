@@ -19,6 +19,7 @@ page 50146 "FA Transfer Order"
                     Importance = Promoted;
                     ToolTip = 'Specifies the number of the involved entry or record, according to the specified number series.';
                     Visible = DocNoVisible;
+                    Editable = false; //PT-FBTS 17-11-2025
 
                     trigger OnAssistEdit()
                     begin

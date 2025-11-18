@@ -99,8 +99,10 @@ pageextension 50048 TransferOrderSubformExt extends "Transfer Order Subform"
                                         repeat
                                             qtyCount := qtyCount + ILE1."Remaining Quantity";
                                         Until ILE1.Next() = 0;
-                                    If qtyCount < TempTransferLine.Quantity then
-                                        Error('Qty avaliable in Lot and Qty enter online is less, please redure a qty available');
+                                    // If qtyCount < TempTransferLine.Quantity then //PT-FBTS old Code Commnet 17-11-25
+                                    //     Error('Qty avaliable in Lot and Qty enter online is less, please redure a qty available');//PT-FBTS old Code Commnet 17-11-25
+                                    If qtyCount < (TempTransferLine.Quantity * TempTransferLine."Qty. per Unit of Measure") then//PT-FBTS 17-11-2025
+                                        Error('Qty available in Lot and Qty enter online is less , please reduce a qty available for Item %1', TempTransferLine."Item No."); //PT-FBTS 17-11-2025
                                     //Validation end
 
                                     //reservation entry creation
