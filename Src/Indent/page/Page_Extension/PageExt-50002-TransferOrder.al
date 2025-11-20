@@ -25,6 +25,30 @@ pageextension 50002 TransferOrder extends "Transfer Order"
     {
         addafter(PostAndPrint)
         {
+            action("Qty. to Receive") //PT-FBTS 19-11-25
+            {
+                ApplicationArea = Dimensions;
+                Caption = 'Update Qty. to Receive';
+                Image = UpdateDescription;
+                trigger OnAction()
+                var
+                    TransferLine: Record "Transfer Line";
+                begin
+                    // if not Confirm('Do you want to update Qty. to Receive from Qty. in Transit?', false) then
+                    //     exit;
+
+                    TransferLine.SetRange("Document No.", Rec."No.");
+                    TransferLine.SetRange("Derived From Line No.", 0);
+                    if TransferLine.FindSet() then
+                        repeat
+                            TransferLine.Validate("Qty. to Receive", TransferLine."Qty. in Transit");
+                            TransferLine.Modify(true);
+                        until TransferLine.Next() = 0;
+
+                    Message('Qty. to Receive updated successfully.');
+                end;
+            }
+
             action("Update Entry No")
             {
                 Image = UpdateShipment;
@@ -66,6 +90,6 @@ pageextension 50002 TransferOrder extends "Transfer Order"
         }
 
     }
-var 
+    var
 
 }

@@ -6,7 +6,6 @@ report 50012 "Stock Audit Report"
     Caption = 'Stock Audit Report';
     RDLCLayout = 'SRC/StockAuditJournal/Report/SalesStockDetailReport.rdl';
 
-
     dataset
     {
         dataitem(Item; Item)
@@ -16,6 +15,8 @@ report 50012 "Stock Audit Report"
             DataItemTableView = where("Phys Invt Counting Period Code" = filter(<> ''), Type = filter('Inventory'));
             column(No_; "No.") { }
             column(Description; Description) { }
+            column(Datetime; CurrentDateTime)
+            { }
             column(Inventory; Inventory) { }
             column(Base_Unit_of_Measure; "Base Unit of Measure") { }
             column(ProdConQty; ProdConQty) { }
@@ -41,13 +42,21 @@ report 50012 "Stock Audit Report"
                 SalesEntryImporter: Codeunit SalesEntryImporter;
                 myInt: Integer;
                 locationCode: Code[20];
+                StockAuditHeader: Record StockAuditHeader;
             begin
                 locationCode := Item.GetFilter("Location Filter");
                 //  Message(locationCode);
+
                 if locationCode = '' then begin
                     Error('Please select location code ');
                     exit;
                 end;
+                StockAuditHeader.Reset();
+                StockAuditHeader.SetRange("Location Code", locationCode);
+                StockAuditHeader.SetRange("Posting Date", CalcDate('-1D', Today));
+                StockAuditHeader.SetFilter(Status, '<>%1', StockAuditHeader.Status::Posted);
+                if StockAuditHeader.FindFirst() then
+                    Error('Inventory Posting is pending for location %1.', locationCode);
 
                 SalesEntryImporter.GetAndStoreSalesEntryData(Today, locationCode)
             end;
