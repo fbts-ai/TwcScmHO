@@ -37,9 +37,9 @@ report 50016 "Purchase Price master report"
             column(LocationName; LocationRec.Name)
             {
             }
-            // column(Region; LocationRec.StoreRegion)
-            // {
-            // }
+            column(Region; '')//LocationRec.StoreRegion
+            {
+            }
             column(CityName; LocationRec.City)
             {
             }

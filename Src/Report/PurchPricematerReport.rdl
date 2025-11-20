@@ -2256,6 +2256,9 @@ End Function
         <Field Name="LocationName">
           <DataField>LocationName</DataField>
         </Field>
+        <Field Name="Region">
+          <DataField>Region</DataField>
+        </Field>
         <Field Name="CityName">
           <DataField>CityName</DataField>
         </Field>
