@@ -19,6 +19,15 @@ pageextension 50174 AssemblyOrder extends "Assembly Order"
     actions
     {
         // Add changes to page actions here
+        modify("P&ost") //PT-FBTS-09/12/25
+        {
+            trigger OnAfterAction()
+            var
+                myInt: Integer;
+            begin
+                CurrPage.Close();
+            end;
+        }
     }
 
     var
@@ -57,6 +66,31 @@ pageextension 50174 AssemblyOrder extends "Assembly Order"
                     EditBool := true
         end;
     end;
+
+
+    ///ICT 
+    trigger OnOpenPage()
+    var
+        myInt: Integer;
+    begin
+        if Rec."Order Posted" then
+            Editable := false
+        else
+            Editable := true;
+    end;
+
+    trigger OnModifyRecord(): Boolean
+    begin
+        if Rec."Order Posted" then
+            Error('user cannot modify this Posted Order');
+    end;
+
+    trigger OnDeleteRecord(): Boolean
+    begin
+        if Rec."Order Posted" then
+            Error('user cannot modify this Posted Order');
+    end;
+    ///ICT 
 
     var
         EditBool: Boolean;

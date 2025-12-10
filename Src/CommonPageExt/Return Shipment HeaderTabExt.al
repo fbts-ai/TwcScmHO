@@ -1,51 +1,18 @@
-tableextension 50054 PurchInvoiceHeader extends "Purch. Inv. Header"
+tableextension 50177 ReturnShipmentHeaderExt extends "Return Shipment Header"
 {
     fields
     {
         // Add changes to table fields here
-        field(50105; ProformaInvoice; Code[20])
-        {
-            Caption = 'Proforma Invoice Number';
-
-        }
-        field(50106; FreightCost; Boolean)
-        {
-            Caption = 'Freight Cost';
-        }
-        field(50107; VendorInvoiceDate; Date)
-        {
-            Caption = 'Vendor Invoice Date';
-        }
-        field(50109; "Creation Location"; code[20])
-        {
-            Caption = 'Creation Location';
-
-        }
-        field(50110; "GST Amount"; Decimal) //PT-FBTS 16-10-24
-        {
-            Caption = 'GST Amount';
-            Editable = false;
-            FieldClass = FlowField;
-            CalcFormula = sum("Detailed GST Ledger Entry"."GST Amount" where("Document No." = field("No.")));
-        }
-        field(50000; "Auto Invoice"; Boolean)
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(50015; "Vendor Bill No."; Code[20]) //PT-FBTS
-        {
-            DataClassification = ToBeClassified;
-        }
         //PT-FBTS 10-11-2025 RepCounter
 
-        field(50130; "Replication Counter"; Integer)
+        field(50000; "Replication Counter"; Integer)
         {
             Caption = 'Replication Counter';
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
                 // Transaction: Record "LSC Transaction Header";
-                Transaction: Record "Purch. Inv. Header";
+                Transaction: Record "Return Shipment Header";
                 ClientSessionUtility: Codeunit "LSC Client Session Utility";
             begin
                 Transaction.SetCurrentKey("Replication Counter");
@@ -57,6 +24,7 @@ tableextension 50054 PurchInvoiceHeader extends "Purch. Inv. Header"
         }
         // PT-FBTS 10-11-2025 RepCounter
     }
+
     keys
     {
         // Add changes to keys here
@@ -64,6 +32,11 @@ tableextension 50054 PurchInvoiceHeader extends "Purch. Inv. Header"
         {
 
         }
+    }
+
+    fieldgroups
+    {
+        // Add changes to field groups here
     }
     trigger OnInsert()
     var

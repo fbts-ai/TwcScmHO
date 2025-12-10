@@ -7,6 +7,8 @@ tableextension 50170 AssemblyHeader extends "Assembly Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(50102; "Order Posted"; Boolean)
+        { }//ICT
 
     }
 

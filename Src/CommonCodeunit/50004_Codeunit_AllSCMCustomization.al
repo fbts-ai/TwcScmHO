@@ -1,6 +1,57 @@
 codeunit 50004 AllSCMCustomization
 {
     EventSubscriberInstance = StaticAutomatic;
+    //ICT
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Assembly-Post", OnPostOnBeforePostedAssemblyHeaderInsert, '', false, false)]
+    local procedure "Assembly-Post_OnPostOnBeforePostedAssemblyHeaderInsert"(AssemblyHeader: Record "Assembly Header"; var PostedAssemblyHeader: Record "Posted Assembly Header")
+    var
+        I: Integer;
+        PostedAssemblyHeader_lRec: record "Posted Assembly Header";
+    begin
+        PostedAssemblyHeader_lRec.Reset();
+        IF PostedAssemblyHeader_lRec.FindLast() then
+            PostedAssemblyHeader."Replication Counter" := PostedAssemblyHeader_lRec."Replication Counter" + 1
+        ELse
+            PostedAssemblyHeader."Replication Counter" := 1;
+        //Message('%1', PostedAssemblyHeader."Replication Counter");
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Transfer Shipment Header", 'OnAfterInsertEvent', '', false, false)]
+    local procedure TSH_OnAfterInsert(var Rec: Record "Transfer Shipment Header"; RunTrigger: Boolean)
+    var
+        TSH: Record "Transfer Shipment Header";
+    begin
+
+
+        TSH.Reset();
+        TSH.SetCurrentKey("Replication Counter");
+        TSH.SetAscending("Replication Counter", true);
+        if TSH.FindLast() then
+            Rec."Replication Counter" := TSH."Replication Counter" + 1
+        Else
+            Rec."Replication Counter" := 1;
+        Rec.Modify();
+
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Transfer Receipt Header", 'OnAfterInsertEvent', '', false, false)]
+    local procedure TRH_OnAfterInsert(var Rec: Record "Transfer Receipt Header"; RunTrigger: Boolean)
+    var
+        TRH: Record "Transfer Receipt Header";
+    begin
+
+        TRH.Reset();
+        TRH.SetCurrentKey("Replication Counter");
+        TRH.SetAscending("Replication Counter", true);
+        if TRH.FindLast() then
+            Rec."Replication Counter" := TRH."Replication Counter" + 1
+        Else
+            Rec."Replication Counter" := 1;
+        Rec.Modify();
+    end;
+    //ICT
+
+
 
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", OnBeforePostPurchaseDoc, '', false, false)]
@@ -48,7 +99,9 @@ codeunit 50004 AllSCMCustomization
                 if TranLine."Unit of Measure Code" = '' then
                     Error('Please check TransferLine Uom is blank for this item %1 ', TranLine."Item No.");
                 if TranLine."HSN/SAC Code" = '' then
-                    Error('Please Check HSN For this item %1 ', TranLine."Item No.");
+                    if TranLine."Transfer Price" = 0 then
+                        Error('Please Check Transfer Price For %1 ..%2 ', TranLine."Item No.", TranLine.Description);
+                Error('Please Check HSN For this item %1 ', TranLine."Item No.");
                 if TranLine."GST Group Code" = '' then
                     Error('Please Check GST Group Code For this item %1 ', TranLine."Item No.");
                 if TranLine."GST Credit" = TranLine."GST Credit"::" " then
@@ -56,6 +109,8 @@ codeunit 50004 AllSCMCustomization
 
 
             until TranLine.Next() = 0;
+
+
 
             TranLine.Reset();
             TranLine.SetRange("Document No.", TransHeader."No.");

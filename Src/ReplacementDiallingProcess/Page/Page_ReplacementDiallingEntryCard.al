@@ -136,6 +136,7 @@ page 50135 ConsumptionCard
                                     ItemJnlLine.Validate("Location Code", Rec."Location Code");
                                     ItemJnlLine.Validate("Unit of Measure Code", BOMCompRec."Unit of Measure Code");
                                     ItemJnlLine.Validate(Quantity, RequiredQty);
+                                    ItemJnlLine.Validate("Source Code", 'ITEMJNL'); //FBTS AA for ICT
                                     ItemJnlLine.Insert(true);
                                     ItemJnlPostLine.RunWithCheck(ItemJnlLine);
 

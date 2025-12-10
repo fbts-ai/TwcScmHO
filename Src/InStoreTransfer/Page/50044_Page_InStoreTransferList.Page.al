@@ -410,6 +410,7 @@ page 50044 "InStore Transfer Order List"
         Rec.FilterGroup(10);
         Rec.MARKEDONLY(TRUE);
         Rec.SetRange(InStoreTransfer, true); ///mahendra added on 16 Aug
+        rec.SetRange("Direct Transfer Posted", false);//FOR ICT ---23-11-2025
         Rec.FilterGroup(0);
 
         /*

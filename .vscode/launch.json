@@ -16,6 +16,38 @@
             "launchBrowser": true,
             "tenant": "default",
             "schemaUpdateMode": "ForceSync"
+        },
+         {
+            "name": "Your own server",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "OnPrem",
+            "server": "http://localhost:8080/Finance",
+            "serverInstance": "Finance",
+            "authentication": "UserPassword",
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "port": 8049,
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "tenant": "default",
+            "schemaUpdateMode": "ForceSync"
+        },
+        {
+            "name": "Your own server",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "OnPrem",
+            "server": "http://localhost:8080/STATEMENT",
+            "serverInstance": "STATEMENT",
+            "authentication": "UserPassword",
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "port": 5049,
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "tenant": "default",
+            "schemaUpdateMode": "ForceSync"
         }
     ]
 }

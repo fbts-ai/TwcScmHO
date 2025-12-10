@@ -10,6 +10,10 @@ tableextension 50003 "Sales Invoice Header Ext" extends "Sales Invoice Header"
         // {
         //     DataClassification = EndUserIdentifiableInformation;
         // }
+        field(60000; "DataLine_ICT"; Text[170]) //ICT
+        { }
+        field(60001; "FieldNo_ICT"; Integer) ////ICT
+        { }
         field(50100; "Customer Type"; Option)
         {
             OptionMembers = " ",Distributor,Franchise;
@@ -91,5 +95,48 @@ tableextension 50003 "Sales Invoice Header Ext" extends "Sales Invoice Header"
         {
             DataClassification = ToBeClassified;
         }
+
+        field(50016; "Replication Counter"; Integer)
+        {
+            Caption = 'Replication Counter';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                // Transaction: Record "LSC Transaction Header";
+                Transaction: Record "Sales Invoice Header";
+                ClientSessionUtility: Codeunit "LSC Client Session Utility";
+            begin
+                Transaction.SetCurrentKey("Replication Counter");
+                if Transaction.FindLast then
+                    "Replication Counter" := Transaction."Replication Counter" + 1
+                else
+                    "Replication Counter" := 1;
+            end;
+        }
+        // PT-FBTS 10-11-2025 RepCounter
+
     }
+    keys
+    {
+        key(SK12; FieldNo_ICT) //ICT
+        { }
+        key(sec; "Replication Counter") //PT-FBTS 10-11-2025 RepCounter
+        {
+
+        }
+        // Add changes to keys here
+    }
+    trigger OnInsert()
+    var
+        myInt: Integer;
+    begin
+        Validate("Replication Counter"); //PT-FBTS 10-11-2025 RepCounter
+    end;
+
+    trigger OnModify()
+    var
+        myInt: Integer;
+    begin
+        Validate("Replication Counter"); //PT-FBTS 10-11-2025 RepCounter
+    end;
 }

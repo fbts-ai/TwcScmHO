@@ -499,6 +499,21 @@ page 50167 "Assembly Productions"
         //end
     end;
 
+    //ICT
+    trigger OnModifyRecord(): Boolean
+    begin
+        if Rec."Order Posted" then
+            Error('user cannot modify this Posted Order');
+    end;
+
+    trigger OnDeleteRecord(): Boolean
+    var
+        myInt: Integer;
+    begin
+        if Rec."Order Posted" then
+            Error('user cannot modify this Posted Order');
+    end;
+    //ICT
     var
         ItemAvailFormsMgt: Codeunit "Item Availability Forms Mgt";
 

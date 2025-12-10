@@ -116,6 +116,10 @@ tableextension 50022 TransferOrderSCMExt extends "Transfer Header"
             Editable = false;
             FieldClass = FlowField;
         }
+        //ICT
+        field(51117; "Direct Transfer Posted"; Boolean)
+        { }
+        //ICT
     }
     //ALLE_NICK_261223
     procedure CheckTransferLines(Ship: Boolean)

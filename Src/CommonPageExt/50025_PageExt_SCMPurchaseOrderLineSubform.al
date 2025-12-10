@@ -89,6 +89,9 @@ pageextension 50025 SCMPurchaseOrderLineSubform extends "Purchase Order Subform"
                 TempGLAccount: Record "G/L Account";
 
             begin
+
+
+
                 IF Type = Rec.Type::Item then begin
                     TempPurchHead.Reset();
                     TempPurchHead.SetRange("No.", Rec."Document No.");
@@ -157,6 +160,35 @@ pageextension 50025 SCMPurchaseOrderLineSubform extends "Purchase Order Subform"
 
 
             end;
+
+            trigger OnBeforeValidate() //PT-FBTS 09-12-25
+
+            var
+                PurchLine: Record "Purchase Line";
+                PurchHeader: Record "Purchase Header";
+            begin
+                PurchHeader.Reset();
+                PurchHeader.SetRange("No.", Rec."Document No.");
+                if PurchHeader.FindFirst() then begin
+                    if "No." <> '' then begin
+                        PurchLine.Reset();
+                        PurchLine.SetRange("No.", "No.");
+                        PurchLine.SetRange("Location Code", PurchHeader."Location Code");
+                        PurchLine.SetRange("Short Close", false);
+                        PurchLine.SetFilter(PurchLine."Outstanding Quantity", '<>%1', 0);
+                        if PurchLine.FindFirst() then begin
+                            // repeat
+                            // if PurchLine."Outstanding Quantity" <> 0 then
+                            Message('Open Purchase Order(s) exist for the %1 %2 for the Location %3. Please check and then proceed.',
+                PurchLine."No.",
+                PurchLine.Description,
+                PurchHeader."Location Code");
+                            //until PurchLine.Next() = 0;
+                        end;
+                    end;
+                end;
+            end;
+            //PT-FBTS 09-12-25
         }
 
 

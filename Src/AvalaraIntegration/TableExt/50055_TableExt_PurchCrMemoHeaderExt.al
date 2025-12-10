@@ -29,8 +29,52 @@ tableextension 50055 PurchCrMemoGSTExt extends "Purch. Cr. Memo Hdr."
             Caption = 'IsJSONImported';
             DataClassification = EndUserPseudonymousIdentifiers;
         }
+        //PT-FBTS 10-11-2025 RepCounter
+
+        field(50018; "Replication Counter"; Integer)
+        {
+            Caption = 'Replication Counter';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                // Transaction: Record "LSC Transaction Header";
+                Transaction: Record "Purch. Cr. Memo Hdr.";
+                ClientSessionUtility: Codeunit "LSC Client Session Utility";
+            begin
+                Transaction.SetCurrentKey("Replication Counter");
+                if Transaction.FindLast then
+                    "Replication Counter" := Transaction."Replication Counter" + 1
+                else
+                    "Replication Counter" := 1;
+            end;
+        }
+        // PT-FBTS 10-11-2025 RepCounter
+
 
     }
+    keys
+    {
+        // Add changes to keys here
+        key(sec; "Replication Counter") //PT-FBTS 10-11-2025 RepCounter ICT
+        {
+
+        }
+    }
+    trigger OnInsert()
+    var
+        myInt: Integer;
+    begin
+        Validate("Replication Counter"); //PT-FBTS 10-11-2025 RepCounterICT
+    end;
+
+    trigger OnModify()
+    var
+        myInt: Integer;
+    begin
+        Validate("Replication Counter"); //PT-FBTS 10-11-2025 RepCounter ICT
+    end;
+
+    var
 
     var
         myInt: Integer;

@@ -1,43 +1,16 @@
-tableextension 50053 PurchReceiptHeader extends "Purch. Rcpt. Header"
+tableextension 50187 SalesCrMemoHeaderTabExt extends "Sales Cr.Memo Header"
 {
     fields
     {
-        // Add changes to table fields here
-        field(50003; "Indent No."; Code[25])
-        {
-
-        }
-        field(50105; ProformaInvoice; Code[20])
-        {
-            Caption = 'Proforma Invoice Number';
-
-        }
-        field(50106; FreightCost; Boolean)
-        {
-            Caption = 'Freight Cost';
-        }
-        field(50107; VendorInvoiceDate; Date)
-        {
-            Caption = 'Vendor Invoice Date';
-        }
-        field(50108; VendorInvoiceNo; Code[35])
-        {
-            Caption = 'Vendor Invoice No';
-        }
-        field(50109; "Creation Location"; code[20])
-        {
-            Caption = 'Creation Location';
-
-        }
-        //PT-FBTS 10-11-2025 RepCounter
-        field(50110; "Replication Counter"; Integer)
+        // PT-FBTS 10-11-2025 RepCounter
+        field(50013; "Replication Counter"; Integer)
         {
             Caption = 'Replication Counter';
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
                 // Transaction: Record "LSC Transaction Header";
-                Transaction: Record "Purch. Rcpt. Header";
+                Transaction: Record "Sales Cr.Memo Header";
                 ClientSessionUtility: Codeunit "LSC Client Session Utility";
             begin
                 Transaction.SetCurrentKey("Replication Counter");
@@ -47,18 +20,18 @@ tableextension 50053 PurchReceiptHeader extends "Purch. Rcpt. Header"
                     "Replication Counter" := 1;
             end;
         }
-        //PT-FBTS 10-11-2025 RepCounter
+        // PT-FBTS 10-11-2025 RepCounter
+
+
     }
     keys
     {
         // Add changes to keys here
-
         key(sec; "Replication Counter") //PT-FBTS 10-11-2025 RepCounter
         {
 
         }
     }
-
     trigger OnInsert()
     var
         myInt: Integer;
@@ -72,6 +45,7 @@ tableextension 50053 PurchReceiptHeader extends "Purch. Rcpt. Header"
     begin
         Validate("Replication Counter"); //PT-FBTS 10-11-2025 RepCounter
     end;
+
 
     var
         myInt: Integer;
