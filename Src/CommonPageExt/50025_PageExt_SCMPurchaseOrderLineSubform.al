@@ -9,6 +9,14 @@ pageextension 50025 SCMPurchaseOrderLineSubform extends "Purchase Order Subform"
 
         }
         */
+
+        addafter("Blanket Order No.")
+        {
+            field("Order No"; Rec."Order No")
+            { ApplicationArea = all; }
+            field("Order Line No"; Rec."Order Line No")
+            { ApplicationArea = all; }
+        }
         modify("Location Code")
         {
             Editable = false; //PT-FBTS 070325

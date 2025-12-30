@@ -87,6 +87,7 @@ page 50046 "Instore Transfer Order Subform"
                 {
                     ApplicationArea = Location;
                     BlankZero = true;
+                    Editable = false;//pt-fbts 30-12-25
                     ToolTip = 'Specifies the quantity of items that remain to be shipped.';
                 }
                 field("Quantity Shipped"; Rec."Quantity Shipped")

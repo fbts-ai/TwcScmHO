@@ -139,6 +139,11 @@ tableextension 50021 PurchaseOrderShortClosedExt extends "Purchase Header"
         }
         //Gaurav_FBTS 061125
 
+        field(50020; "Order No"; Code[20]) //PT-FBTS 11-12-2025
+        {
+            DataClassification = ToBeClassified;
+        }
+
     }
 
     var

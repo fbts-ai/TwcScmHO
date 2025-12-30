@@ -99,9 +99,9 @@ codeunit 50004 AllSCMCustomization
                 if TranLine."Unit of Measure Code" = '' then
                     Error('Please check TransferLine Uom is blank for this item %1 ', TranLine."Item No.");
                 if TranLine."HSN/SAC Code" = '' then
-                    if TranLine."Transfer Price" = 0 then
-                        Error('Please Check Transfer Price For %1 ..%2 ', TranLine."Item No.", TranLine.Description);
-                Error('Please Check HSN For this item %1 ', TranLine."Item No.");
+                    Error('Please Check HSN For this item %1 ', TranLine."Item No.");
+                if TranLine."Transfer Price" = 0 then
+                    Error('Please Check Transfer Price For %1 ..%2 ', TranLine."Item No.", TranLine.Description);
                 if TranLine."GST Group Code" = '' then
                     Error('Please Check GST Group Code For this item %1 ', TranLine."Item No.");
                 if TranLine."GST Credit" = TranLine."GST Credit"::" " then
@@ -158,6 +158,25 @@ codeunit 50004 AllSCMCustomization
         InvtAdjmtEntryOrder."Manual Closed-Open" := true;
         ModifyOrderAdjmt := true;
 
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", OnAfterCopyGenJnlLineFromPurchHeader, '', false, false)]
+    local procedure "Gen. Journal Line_OnAfterCopyGenJnlLineFromPurchHeader"(PurchaseHeader: Record "Purchase Header"; var GenJournalLine: Record "Gen. Journal Line")
+    begin
+        GenJournalLine.Validate("Order NO", PurchaseHeader."Order No");
+        //GenJournalLine.Modify();
+
+
+    end;
+
+
+    [EventSubscriber(ObjectType::Table, Database::"Purch. Rcpt. Line", OnAfterInsertInvLineFromRcptLine, '', false, false)]
+    local procedure "Purch. Rcpt. Line_OnAfterInsertInvLineFromRcptLine"(var PurchLine: Record "Purchase Line"; PurchOrderLine: Record "Purchase Line"; var NextLineNo: Integer; PurchRcptLine: Record "Purch. Rcpt. Line")
+    begin //PT-FBTS-12-12-25
+        PurchLine.Validate("Order No", PurchRcptLine."Order No.");
+        PurchLine.Validate("Order Line No", PurchRcptLine."Order Line No.");
+        PurchLine.Modify();
+        //Message('%1..%2', PurchLine."Order No", PurchLine."Order Line No");
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnSetOrderAdjmtPropertiesOnBeforeSetAllowOnlineAdjustment', '', false, false)]
@@ -3465,6 +3484,7 @@ var LotNo: Code[20]; var qty: Decimal; var qty_base: Decimal; var qtyshipbase: D
     )
     begin
         VendorLedgerEntry."PO No." := GenJournalLine."PO No.";
+        VendorLedgerEntry."PO No." := GenJournalLine."Order NO";//PT-FBTS 11-12-25
     end;
     //PT-FBTS- 23-10-24
 

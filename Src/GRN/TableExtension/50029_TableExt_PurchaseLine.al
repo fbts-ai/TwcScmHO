@@ -91,6 +91,15 @@ tableextension 50029 PurchaseLineExt extends "Purchase Line"
 
         }
 
+        field(50010; "Order No"; Code[20]) //PT-FBTS 11-12-2025
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50011; "Order Line No"; Integer) //PT-FBTS 11-12-2025
+        {
+            DataClassification = ToBeClassified;
+        }
+
 
 
         //AJ_19102023

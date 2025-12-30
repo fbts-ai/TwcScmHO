@@ -125,13 +125,16 @@ codeunit 50129 "ICT Processes_Custom"
                             xICTHeaderTemp."Source code" := '';
                     xICTHeaderTemp.Insert;
                 end else begin
+                    // if ProcessICTDocSplitSet(xICTHeaderTemp) then begin
                     ProcessICTDocSplitSet(xICTHeaderTemp);
                     xICTHeaderTemp.Reset;
                     xICTHeaderTemp.DeleteAll;
                     xICTHeaderTemp := xICTHeader;
                     xICTHeaderTemp.Insert;
+                    //   end;
                 end;
             until xICTHeader.Next = 0;
+            // if ProcessICTDocSplitSet(xICTHeaderTemp) then;
             ProcessICTDocSplitSet(xICTHeaderTemp);
         end;
 
@@ -139,7 +142,8 @@ codeunit 50129 "ICT Processes_Custom"
             StatWin.Close;
     end;
 
-    internal procedure ProcessICTDocSplitSet(var pICTHeader: Record "LSC Retail ICT Header")
+    // [TryFunction]
+    local procedure ProcessICTDocSplitSet(var pICTHeader: Record "LSC Retail ICT Header")
     var
         xICTHeader: Record "LSC Retail ICT Header";
         xICTHeader2: Record "LSC Retail ICT Header";
@@ -147,10 +151,10 @@ codeunit 50129 "ICT Processes_Custom"
         xGenJournalTemplate: Record "Gen. Journal Template";
         xGenJournalBatch: Record "Gen. Journal Batch";
         xICTSetup: Record "LSC Retail ICT Setup";
+        xDocNo: Code[20];
     begin
         // Process wating ICT Req. split by Document No.
         Clear(GenJnlPostLine);
-
         xICTHeader.LockTable;
 
         // pICTHeader.Reset;

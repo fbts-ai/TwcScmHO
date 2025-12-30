@@ -12,6 +12,7 @@ page 50045 "InStore Transfer Order"
             group(General)
             {
                 Caption = 'General';
+                Editable = EditBool; //PT-FBTS 30-12-25
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = Location;
@@ -200,7 +201,8 @@ page 50045 "InStore Transfer Order"
             part(TransferLines; "Instore Transfer Order Subform")
             {
                 ApplicationArea = Location;
-                Editable = true;//IsTransferLinesEditable;
+                //  Editable = true;//IsTransferLinesEditable;
+                Editable = EditBool; //PT-FBTS
                 Enabled = true;//IsTransferLinesEditable;
                 SubPageLink = "Document No." = FIELD("No."),
                               "Derived From Line No." = CONST(0);
@@ -741,6 +743,13 @@ page 50045 "InStore Transfer Order"
     trigger OnAfterGetRecord()
     begin
         EnableTransferFields := not IsPartiallyShipped();
+        if Rec.Status = Rec.Status::Released then begin //PT-FBTS
+            EditBool := false
+        end else
+            if Rec.Status = Rec.Status::Open then
+                EditBool := true;
+
+        EnableTransferFields := not IsPartiallyShipped();
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -761,6 +770,19 @@ page 50045 "InStore Transfer Order"
         exit(true);
     end;
 
+
+
+    trigger OnAfterGetCurrRecord() //PT-FBTS
+    var
+        myInt: Integer;
+    begin
+        if Rec.Status = Rec.Status::Released then begin //PT-FBTS
+            EditBool := false
+        end else
+            if Rec.Status = Rec.Status::Open then
+                EditBool := true;
+    end;
+
     trigger OnOpenPage()
     begin
         SetDocNoVisible();
@@ -774,6 +796,7 @@ page 50045 "InStore Transfer Order"
         FormatAddress: Codeunit "Format Address";
         DocNoVisible: Boolean;
         IsFromCountyVisible: Boolean;
+        EditBool: Boolean;//pT-FBTS 30-12-25
         IsToCountyVisible: Boolean;
         [InDataSet]
         IsTransferLinesEditable: Boolean;
@@ -845,5 +868,6 @@ page 50045 "InStore Transfer Order"
         TransferLine.SetFilter("Quantity Shipped", '> 0');
         exit(not TransferLine.IsEmpty);
     end;
+
 }
 

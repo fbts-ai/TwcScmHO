@@ -10,6 +10,8 @@ pageextension 51115 ItemJournal extends "Item Journal"
                 ApplicationArea = all;
                 Editable = false;
             }
+            field("Line No."; Rec."Line No.")
+            { }
         }
     }
 
@@ -24,6 +26,7 @@ pageextension 51115 ItemJournal extends "Item Journal"
             begin
                 ItemJnlLine.SetRange("Journal Template Name", Rec."Journal Template Name");
                 ItemJnlLine.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+                ItemJnlLine.SetRange("LSC InStore-Created Entry", false);//181225
                 if ItemJnlLine.FindSet() then
                     repeat
                         ItemJnlLine.TestField("Reason Code");

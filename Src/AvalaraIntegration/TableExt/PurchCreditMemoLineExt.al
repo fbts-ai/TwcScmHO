@@ -41,6 +41,14 @@ tableextension 50063 CrMemo extends "Purch. Cr. Memo Line"
         {
 
         }
+        field(50011; "Order Line No"; Integer) //PT-FBTS 02-09-2-2025
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50010; "Order No"; Code[20]) //PT-FBTS 02-09-2-2025
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys

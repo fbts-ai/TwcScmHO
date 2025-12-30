@@ -29,6 +29,10 @@ tableextension 50053 PurchReceiptHeader extends "Purch. Rcpt. Header"
             Caption = 'Creation Location';
 
         }
+        field(50020; "Order No"; Code[20]) //PT-FBTS 02-09-2-2025
+        {
+            DataClassification = ToBeClassified;
+        }
         //PT-FBTS 10-11-2025 RepCounter
         field(50110; "Replication Counter"; Integer)
         {

@@ -32,6 +32,10 @@ tableextension 50054 PurchInvoiceHeader extends "Purch. Inv. Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(50020; "Order No"; Code[20]) //PT-FBTS 02-15-12-2025
+        {
+            DataClassification = ToBeClassified;
+        }
         field(50015; "Vendor Bill No."; Code[20]) //PT-FBTS
         {
             DataClassification = ToBeClassified;

@@ -13,6 +13,10 @@ tableextension 50055 PurchCrMemoGSTExt extends "Purch. Cr. Memo Hdr."
             Caption = 'IRN Hash';
             DataClassification = CustomerContent;
         }
+        field(50020; "Order No"; Code[20]) //PT-FBTS 02-09-2-2025
+        {
+            DataClassification = ToBeClassified;
+        }
         field(50012; "QR Code"; Blob)
         {
             Subtype = Bitmap;

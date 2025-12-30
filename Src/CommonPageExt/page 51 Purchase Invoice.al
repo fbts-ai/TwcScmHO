@@ -9,6 +9,11 @@ pageextension 50115 PurchaseInvoiceExt extends 51
             {
                 ApplicationArea = all;
             }
+            field("Order No"; Rec."Order No")
+            {
+                ApplicationArea = all;
+            }
+
         }
     }
 

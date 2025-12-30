@@ -5,6 +5,8 @@ tableextension 50022 TransferOrderSCMExt extends "Transfer Header"
 
         //indent start
         // Add changes to table fields here
+
+
         field(50000; "Requistion No."; Code[25])
         {
             DataClassification = ToBeClassified;

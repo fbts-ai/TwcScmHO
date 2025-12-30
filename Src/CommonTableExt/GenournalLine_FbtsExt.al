@@ -7,6 +7,7 @@ tableextension 50127 GenournalLine extends "Gen. Journal Line"
         {
             TableRelation = "Purchase Header"."No." where("Document Type" = const(Order), "Buy-from Vendor No." = field("Account No."));
         }
+        field(50001; "Order NO"; Code[20]) { } //PT-FBTS 11-12-2025
     }
 
     keys

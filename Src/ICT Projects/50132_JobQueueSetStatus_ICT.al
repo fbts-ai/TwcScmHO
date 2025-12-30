@@ -3,6 +3,7 @@ codeunit 50132 "Job Queue Entry-ICT"
     trigger OnRun()
     var
         JobList: Record "Job Queue Entry";
+        r: page 672;
     begin
         JobList.Reset();
         JobList.SetRange("Object Type to Run", JobList."Object Type to Run"::Codeunit);

@@ -9,6 +9,8 @@ pageextension 50026 SCMPostedPurchaseInvoice extends "Posted Purchase Invoices"
             {
                 ApplicationArea = all;
             }
+            // field("Order No"; REC."Order No")
+            // { ApplicationArea = ALL; }//pt-FBTS-12-12-25
             field("Vendor Bill No."; "Vendor Bill No.")
             { ApplicationArea = ALL; }//pt-FBTS-09-10-25
         }

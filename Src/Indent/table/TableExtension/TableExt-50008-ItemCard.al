@@ -3,6 +3,28 @@ tableextension 50008 Itemcard extends Item
     fields
     {
         // Add changes to table fields here
+        modify(Description)
+        {
+            trigger OnAfterValidate() // PT-FBTS 23/12/25  Ticket-591 
+            var
+                ItemRec: Record Item;
+                ItemNoList: Text;
+            begin
+                ItemRec.Reset();
+                ItemRec.SetRange(Description, Rec.Description);
+                ItemRec.SetFilter("No.", '<>%1', Rec."No.");
+                if ItemRec.FindSet() then begin
+                    repeat
+                        if ItemNoList = '' then
+                            ItemNoList := ItemRec."No."
+                        else
+                            ItemNoList += ', ' + ItemRec."No.";
+                    until ItemRec.Next() = 0;
+                    Message('Same Description already exists for Item No.(s): %1', ItemNoList);
+                end;
+            end;
+        }
+        // PT-FBTS 23/12/25  Ticket-591 
         field(50100; "Max Qty"; Decimal)
         {
 

@@ -300,6 +300,7 @@ page 51017 "GRN List"
                                         PurchaseHeader.Validate("Buy-from Vendor No.", GRN_lRec."Vendor No.");
                                         PurchaseHeader.Validate("Location Code", GRN_lRec."Location Code");
                                         PurchaseHeader.Validate("Posting Date", GRN_lRec."GRN Date");//Aashish
+                                        PurchaseHeader.Validate("Order No", GRN_lRec."Purchase Order No.");//PT-FBTS 11-12-24
                                         //PurchaseHeader.Validate("Posting Date", Today);
                                         IF GRN_lRec."Vendor Invoice Date" <> '' then begin
                                             Evaluate(DocDate, GRN_lRec."Vendor Invoice Date");
@@ -353,6 +354,8 @@ page 51017 "GRN List"
                                     PurchaseLine.Validate("LSC Original Quantity (base)", PurchRcpLine."Quantity (Base)");
                                     PurchaseLine."Receipt No." := PurchRcpLine."Document No.";
                                     PurchaseLine."Receipt Line No." := PurchRcpLine."Line No.";
+                                    PurchaseLine."Order No" := PurchRcpLine."Order No.";//PT-FBTS 11-12-25
+                                    PurchaseLine."Order Line No" := PurchRcpLine."Order Line No."; //PT-FBTS 11-12-25
                                     PurchaseLine."GRN Rate" := GRN_lRec."GRN Rate";
                                     PurchaseLine."PI Qty." := GRN_lRec."PI Qty.";
                                     PurchaseLine."Entry No." := GRN_lRec."Entry No.";

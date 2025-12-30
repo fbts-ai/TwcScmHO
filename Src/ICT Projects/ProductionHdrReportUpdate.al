@@ -20,6 +20,9 @@ report 50014 ProductionMarkedFinish_ICT
                 ProductionLine: Record "Prod. Order Line";
                 Qty: Decimal;
                 FinishQty: Decimal;
+                // Pro : Page 99000831
+                ProCU: Codeunit "Prod. Order Status Management";
+                NewStatus: Enum "Production Order Status";
             begin
                 Qty := 0;
                 FinishQty := 0;
@@ -33,8 +36,10 @@ report 50014 ProductionMarkedFinish_ICT
 
                 if (Qty <> 0) AND (FinishQty <> 0) THEN begin
                     if Qty = FinishQty then begin
-                        Status := Status::Finished;
-                        Modify();
+                        // "Production Order".Status := "Production Order".Status::Finished;
+                        // "Production Order".Modify();
+                        ProCU.ChangeProdOrderStatus("Production Order", NewStatus::Finished, Today, false);
+                        Commit();
                     end;
                 end;
             end;

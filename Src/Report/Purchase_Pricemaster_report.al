@@ -9,11 +9,15 @@ report 50016 "Purchase Price master report"
         dataitem(TWCPurchasePrice; TWCPurchasePrice)
         {
             RequestFilterFields = "Item No.", "Location Code", "Vendor No.", "Ending Date";
-            //DataItemTableView=where("Ending Date" =field())
+            DataItemTableView = where(PurchPricetype = filter(ITEM));
 
             column(userID; UserId)
             { }
             column(currentDate; CurrentDateTime)
+            { }
+            column(Unit_of_Measure_Code; "Unit of Measure Code")
+            { }
+            column(QtyPar; QtyPar)
             { }
             column(location; location)
             { }
@@ -89,7 +93,7 @@ report 50016 "Purchase Price master report"
             { }
             column(Businesssharebasislastmonthpurchasevalue; Round(TotalValueDirectCost))
             { }
-            column(CurrentActiveInactiveitem; ActiveNonActive)
+            column(ActiveNonActive; ActiveNonActive)
             {
             }
             trigger OnPostDataItem()
@@ -117,7 +121,7 @@ report 50016 "Purchase Price master report"
                 MultitaxApplication.Reset();
                 MultitaxApplication.SetRange(Item, TWCPurchasePrice."Item No.");
                 MultitaxApplication.SetRange(Vendor, VendorRec."No.");
-                // MultitaxApplication.SetRange(StoreRegion, LocationRec.StoreRegion);//PT-Fbts
+                // MultitaxApplication.SetRange(StoreRegion, LocationRec.StoreRegion);
                 if MultitaxApplication.FindFirst() then begin
                     gstgroup := MultitaxApplication."GST Group Code";
                     HSNHAC := MultitaxApplication."HSN/SAC CODE";
@@ -164,6 +168,15 @@ report 50016 "Purchase Price master report"
                 ItemUnitofMeasure.SetRange(code, ItemRec."Purch. Unit of Measure");
                 if ItemUnitofMeasure.FindFirst() then
                     PurchqtyPer := ItemUnitofMeasure."Qty. per Unit of Measure";
+
+
+                Clear(QtyPar);
+                ItemUnitofMeasure.Reset();
+                ItemUnitofMeasure.SetRange("Item No.", TWCPurchasePrice."Item No.");
+                ItemUnitofMeasure.SetRange(Code, TWCPurchasePrice."Unit of Measure Code");
+                if ItemUnitofMeasure.FindFirst() then
+                    QtyPar := ItemUnitofMeasure."Qty. per Unit of Measure";
+
                 //end;
 
                 // Clear(DirctUnitwithVendor);
@@ -234,43 +247,45 @@ report 50016 "Purchase Price master report"
                             DirctUnitwithItem += (PurchaseReceiptLine."Direct Unit Cost" * PurchaseReceiptLine.Quantity);
                         until PurchaseReceiptLine.Next() = 0;
                     end;
-
-                    // DirctUnitwithVendor := GetVendorCost(TWCPurchasePrice, StartDateValue, EndDateValue);
-                    // DirctUnitwithItem := GetItemCost(TWCPurchasePrice, StartDateValue, EndDateValue);
-
-                    if DirctUnitwithItem <> 0 then
-                        TotalValueDirectCost := Round(DirctUnitwithVendor / DirctUnitwithItem * 100)
-                    else
-                        TotalValueDirectCost := 0;
-
-
-                    // Clear(DirctUnitwithVendor);
-                    // PurchaseRcptDirectCost.SetRange(Buy_from_Vendor_No_, TWCPurchasePrice."Vendor No.");
-                    // PurchaseRcptDirectCost.SetRange(No_, TWCPurchasePrice."Item No.");
-                    // PurchaseRcptDirectCost.SetRange(Location_Code, TWCPurchasePrice."Location Code");
-                    // PurchaseRcptDirectCost.SetFilter(PostingDate, '%1..%2', StartDateValue, EndDateValue);
-                    // if PurchaseRcptDirectCost.Open() then begin
-                    //     while PurchaseRcptDirectCost.Read() do
-                    //         DirctUnitwithVendor += PurchaseRcptDirectCost.DirectUnitCost;
-                    // end;
-
-                    // exit(DirctUnitwithVendor);
-
-                    Clear(ActiveNonActive);
-                    IndentMappingStaup.Reset();
-                    IndentMappingStaup.SetRange("Item No.", TWCPurchasePrice."Item No.");
-                    IndentMappingStaup.SetRange("Location Code", "Location Code");
-                    IndentMappingStaup.SetRange("Sourcing Method", IndentMappingStaup."Sourcing Method"::Purchase);
-                    IndentMappingStaup.SetRange("Source Location No.", "Vendor No.");
-                    if IndentMappingStaup.FindFirst() then begin
-                        if IndentMappingStaup."Block Indent" = true then begin
-                            ActiveNonActive := 'Inactive'
-                        end else
-                            if IndentMappingStaup."Block Indent" = false then
-                                ActiveNonActive := 'Active ';
-                    end else
-                        ActiveNonActive := 'Not Defined';
                 end;
+                // DirctUnitwithVendor := GetVendorCost(TWCPurchasePrice, StartDateValue, EndDateValue);
+                // DirctUnitwithItem := GetItemCost(TWCPurchasePrice, StartDateValue, EndDateValue);
+
+                if DirctUnitwithItem <> 0 then
+                    TotalValueDirectCost := Round(DirctUnitwithVendor / DirctUnitwithItem * 100)
+                else
+                    TotalValueDirectCost := 0;
+
+
+                // Clear(DirctUnitwithVendor);
+                // PurchaseRcptDirectCost.SetRange(Buy_from_Vendor_No_, TWCPurchasePrice."Vendor No.");
+                // PurchaseRcptDirectCost.SetRange(No_, TWCPurchasePrice."Item No.");
+                // PurchaseRcptDirectCost.SetRange(Location_Code, TWCPurchasePrice."Location Code");
+                // PurchaseRcptDirectCost.SetFilter(PostingDate, '%1..%2', StartDateValue, EndDateValue);
+                // if PurchaseRcptDirectCost.Open() then begin
+                //     while PurchaseRcptDirectCost.Read() do
+                //         DirctUnitwithVendor += PurchaseRcptDirectCost.DirectUnitCost;
+                // end;
+
+                // exit(DirctUnitwithVendor);
+
+                Clear(ActiveNonActive);
+                IndentMappingStaup.Reset();
+                IndentMappingStaup.SetRange("Item No.", TWCPurchasePrice."Item No.");
+                IndentMappingStaup.SetRange("Location Code", TWCPurchasePrice."Location Code");
+                IndentMappingStaup.SetRange("Sourcing Method", IndentMappingStaup."Sourcing Method"::Purchase);
+                IndentMappingStaup.SetRange("Source Location No.", TWCPurchasePrice."Vendor No.");
+                if IndentMappingStaup.FindFirst() then begin
+                    if IndentMappingStaup."Block Indent" = true then begin
+                        ActiveNonActive := 'Inactive'
+                    end;
+                    if IndentMappingStaup."Block Indent" = false then
+                        ActiveNonActive := 'Active ';
+                end
+                else
+                    ActiveNonActive := 'Not Defined';
+
+                //  Message('%1', ActiveNonActive);
             end;
 
             trigger OnPreDataItem()
@@ -362,6 +377,7 @@ report 50016 "Purchase Price master report"
         Vendor: Code[50];
         StartDateValue: Date;
         EndDateValue: Date;
+        QtyPar: Decimal;
         Item: Code[50];
 
 
@@ -387,7 +403,7 @@ report 50016 "Purchase Price master report"
         DirctUnitwithItem: Decimal;
         TotalValueDirectCost: Decimal;
         IndentMappingStaup: Record "Indent Mapping";
-        ActiveNonActive: Text;
+        ActiveNonActive: Text[100];
 
     // procedure GetVendorCost(TWCPurchasePrice: Record TWCPurchasePrice; StartDateValue: Date; EndDateValue: Date): Decimal
     // var

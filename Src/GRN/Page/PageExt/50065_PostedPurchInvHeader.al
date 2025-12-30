@@ -9,6 +9,8 @@ pageextension 50065 PostedPurchInvext extends "Posted Purchase Invoice"
             {
                 Caption = 'Vendor Invoice Date';
             }
+            // field("Order No"; Rec."Order No")
+            // { ApplicationArea = all; }
             field(ProformaInvoice; rec.ProformaInvoice)
             {
                 Caption = 'Proforma Invoice Nubmer';

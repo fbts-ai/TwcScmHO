@@ -16,6 +16,7 @@ report 50116 "Purchase Order Details"
             column(PO_No; "No.")
             {
             }
+
             column(Posting_Date; "Posting Date")
             {
 
@@ -71,6 +72,8 @@ report 50116 "Purchase Order Details"
                 {
 
                 }
+                column(Blanket_Order_No_; "Blanket Order No.")
+                { }
                 column(Location_Code; "Location Code")
                 {
 

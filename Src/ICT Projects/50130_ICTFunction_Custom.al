@@ -821,6 +821,19 @@ codeunit 50130 "ICT Functions_Custom"
         //end;
     END;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Assembly-Post", OnBeforePostCorrectionItemJnLine, '', false, false)]
+    local procedure "Assembly-Post_OnBeforePostCorrectionItemJnLine"(
+    var ItemJournalLine: Record "Item Journal Line";
+    var TempItemLedgEntry: Record "Item Ledger Entry" temporary)
+    begin
+        if ItemJournalLine."Entry Type" = ItemJournalLine."Entry Type"::"Assembly Consumption" then
+            if ItemJournalLine.Correction then
+                if ItemJournalLine.Quantity = 0 then begin
+                    ItemJournalLine.Quantity := ItemJournalLine."Quantity (Base)" / ItemJournalLine."Qty. per Unit of Measure";
+                    ItemJournalLine."Invoiced Quantity" := ItemJournalLine.Quantity;
+                end;
+    end;
+
 }
 
 

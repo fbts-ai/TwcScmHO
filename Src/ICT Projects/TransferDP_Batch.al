@@ -41,7 +41,6 @@ report 50011 TransferDPBatch
                                 TransferLine.Quantity := TransferRcptLine.Quantity;
                                 TransferLine.Insert();
                             until TransferRcptLine.next = 0;
-
                     end;
                 end;
             end;

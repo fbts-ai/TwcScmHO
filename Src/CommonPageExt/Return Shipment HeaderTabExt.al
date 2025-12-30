@@ -4,7 +4,10 @@ tableextension 50177 ReturnShipmentHeaderExt extends "Return Shipment Header"
     {
         // Add changes to table fields here
         //PT-FBTS 10-11-2025 RepCounter
-
+        field(50020; "Order No"; Code[20]) //PT-FBTS 02-09-2-2025
+        {
+            DataClassification = ToBeClassified;
+        }
         field(50000; "Replication Counter"; Integer)
         {
             Caption = 'Replication Counter';

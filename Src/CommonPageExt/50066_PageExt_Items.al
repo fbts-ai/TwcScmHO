@@ -3,6 +3,7 @@ pageextension 50082 ItemExt extends "Item List"
     //ALLENick091023_Start
     layout
     {
+
         addafter(InventoryField) //PT-Fbts 16-08-24
         {
             // field("Qty. on Purch. Order"; "Qty. on Purch. Order")

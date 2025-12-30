@@ -2544,6 +2544,7 @@ codeunit 50107 "Einvoice CU"
         IGST_lDec: Decimal;
         SGST_lDec: Decimal;
         CGST_lPer: Text;
+        SLNo: Integer;
         IGST_lPer: Text;
         SGST_lPer: Text;
         CGST_lDecPer: Decimal;
@@ -2635,10 +2636,10 @@ codeunit 50107 "Einvoice CU"
                     Evaluate(SGST_lDec, SGST_l);
                 IF CGST_l <> '0' then
                     Evaluate(CGST_lDec, CGST_l);
-
-
-
-
+                // IF STRLEN(FORMAT(SalesLine."Line No.")) > 5 THEN
+                //     SLNo := SalesLine."Line No." / 10000
+                // ELSE
+                //     SLNo := SalesLine."Line No.";
 
                 IF ItemJson = '' THEN
                     ItemJson := '{"SlNo":"' + FORMAT(SalesLine."Line No." / 10000) + '","HsnCd":"' + SalesLine."HSN/SAC Code" + '","IsServc":"' + IsService + '"' +
@@ -2650,7 +2651,7 @@ codeunit 50107 "Einvoice CU"
                   ',"SgstAmt":' + (DELCHR(FORMAT(SGST_lDec), '=', ',')) +
                    ',"TotItemVal":' + DELCHR(FORMAT(SalesLine.Amount + IGST_lDec + CGST_lDec + SGST_lDec), '=', ',') + '}'
                 ELSE
-                    ItemJson += ',{"SlNo":"' + FORMAT(SalesLine."Line No.") + '","HsnCd":"' + SalesLine."HSN/SAC Code" + '","IsServc":"' + IsService + '"' +
+                    ItemJson += ',{"SlNo":"' + FORMAT(SalesLine."Line No." / 10000) + '","HsnCd":"' + SalesLine."HSN/SAC Code" + '","IsServc":"' + IsService + '"' +
                   ',"Qty":' + DELCHR(FORMAT(SalesLine.Quantity), '=', ',') + ',"Unit": "' + FORMAT(UnitofMeasure."E UOM") +
                   '","UnitPrice":' + DELCHR(FORMAT(SalesLine."Unit Price"), '=', ',') +
                   ',"TotAmt":' + DELCHR(FORMAT(SalesLine.Amount), '=', ',') + ',"AssAmt":' + DELCHR(FORMAT(SalesLine.Amount), '=', ',') +

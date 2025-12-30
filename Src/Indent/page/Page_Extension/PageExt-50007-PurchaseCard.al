@@ -59,6 +59,11 @@ pageextension 50007 PurchaseCardExt extends "Purchase Order"
         //  }
         //NTCNFRM
         //AJ_Alle_09282023
+        addafter("Vendor Order No.")
+        {
+            field("Order No"; Rec."Order No")
+            { ApplicationArea = all; }
+        }
 
         modify("Buy-from Vendor No.")
         {

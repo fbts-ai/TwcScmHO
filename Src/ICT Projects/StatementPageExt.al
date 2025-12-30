@@ -26,16 +26,16 @@ pageextension 50114 OpenStatementExt extends "LSC Open Statement"
         // if Retailset."Pending ICT Process" <> 0 then
         //  ICTPRocess.run; //FBTS AA
 
-        if Retailset."Max Pending ICT" <> 0 then begin
-            if Retailset."Pending ICT Replication_W" > Retailset."Max Pending ICT" then
-                Error('ICT need to replicate from Warehouse DB: ' + Format(Retailset."Pending ICT Replication_W"));
-            if Retailset."Pending ICT Replication_F" > Retailset."Max Pending ICT" then
-                Error('ICT need to replicate from Finance DB: ' + Format(Retailset."Pending ICT Replication_F"));
+        /* if Retailset."Max Pending ICT" <> 0 then begin
+             if Retailset."Pending ICT Replication_W" > Retailset."Max Pending ICT" then
+                 Error('ICT need to replicate from Warehouse DB: ' + Format(Retailset."Pending ICT Replication_W"));
+             if Retailset."Pending ICT Replication_F" > Retailset."Max Pending ICT" then
+                 Error('ICT need to replicate from Finance DB: ' + Format(Retailset."Pending ICT Replication_F"));
 
-        end;
-        if Retailset."Pending ICT Process" <> 0 then
-            Error('ICT need to Process in current DB: ' + Format(Retailset."Pending ICT Process"));
-
+         end;
+         if Retailset."Pending ICT Process" <> 0 then
+             Error('ICT need to Process in current DB: ' + Format(Retailset."Pending ICT Process"));
+ */
     end;
 
     var
