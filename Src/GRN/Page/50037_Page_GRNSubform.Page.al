@@ -1054,7 +1054,9 @@ Page 50037 "Purchase Order GRN Subform"
         RecPurchLine.Validate("Shortcut Dimension 1 Code", PurchLine."Shortcut Dimension 1 Code");////PT-FBTS-28-10-25
         RecPurchLine.Validate("Shortcut Dimension 2 Code", PurchLine."Shortcut Dimension 2 Code");////PT-FBTS-28-10-25
         RecPurchLine.Validate("Dimension Set ID", PurchLine."Dimension Set ID");////PT-FBTS-28-10-25
+        RecPurchLine.Validate("Qty. to Receive", 0);//PT-FBTS 12-01-2026
         RecPurchLine.SelectforFixedAsset := false;
+
         RecPurchLine.Modify();//PT-FBTS-28-10-25
     end;
 

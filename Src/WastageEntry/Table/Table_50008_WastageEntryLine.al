@@ -148,6 +148,39 @@ table 50008 WastageEntryLine
             Editable = false;
 
         }
+        field(18; "Posting Date"; Date)
+        {
+
+        }
+        field(19; "API Stock"; Decimal)
+        {
+            Editable = false;
+            Caption = 'SOH';
+        }
+        field(20; "To Data"; Boolean)
+        {
+        }
+
+
+        field(21; "Header Location Code"; code[20])
+        {
+            FieldClass = FlowFilter;
+        }
+        field(22; "Parent Item No."; code[20])
+        {
+            trigger OnValidate()
+            var
+                ItemRec: Record Item;
+            begin
+                if ItemRec.Get(Rec."Parent Item No.") then
+                    Rec.Validate("Parent Item Descrption", ItemRec.Description);
+            end;
+        }
+        field(23; "Parent Item Descrption"; code[100])
+        {
+
+        }
+
 
     }
 

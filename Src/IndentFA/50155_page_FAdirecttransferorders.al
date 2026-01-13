@@ -502,5 +502,15 @@ page 50155 "FA Direct Transfer Orders"
 
     var
         IsFoundationEnabled: Boolean;
+
+    trigger OnOpenPage() //PT-FBTS 08-01-25
+    var
+        Usersetup: Record "User Setup";
+    begin
+        if UserSetup.Get(UserId) then
+            if not UserSetup."Allow Master Modification" then
+                Error('You do not have access Please contact the Administrator.');
+
+    end; //PT-FBTS 08-01-25
 }
 

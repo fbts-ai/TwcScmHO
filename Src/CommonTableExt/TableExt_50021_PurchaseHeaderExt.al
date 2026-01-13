@@ -144,6 +144,14 @@ tableextension 50021 PurchaseOrderShortClosedExt extends "Purchase Header"
             DataClassification = ToBeClassified;
         }
 
+        field(50019; "Sub-Location"; code[10])
+        {
+            DataClassification = ToBeClassified;
+            // TableRelation = Location.Code where("State Code" = field("Location State Code"),
+            // "Use As In-Transit" = filter(false));//PT-FBTS 28-11-25        }
+            TableRelation = Location.Code where("Use As In-Transit" = filter(false));
+        }
+
     }
 
     var

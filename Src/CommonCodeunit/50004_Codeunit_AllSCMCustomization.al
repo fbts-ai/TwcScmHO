@@ -3490,6 +3490,14 @@ var LotNo: Code[20]; var qty: Decimal; var qty_base: Decimal; var qtyshipbase: D
 
     //Ashish-FBTS-11.25.2024-NS
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Purch. Order to Order", OnBeforePurchOrderHeaderModify, '', false, false)]
+    local procedure "Blanket Purch. Order to Order_OnBeforePurchOrderHeaderModify"(var PurchOrderHeader: Record "Purchase Header"; BlanketOrderPurchHeader: Record "Purchase Header")
+    begin  //PT-FBTS-12-01-2025
+
+        PurchOrderHeader.Validate("Location Code", BlanketOrderPurchHeader."Sub-Location");
+        PurchOrderHeader.Modify();
+    end; //PT-FBTS-12-01-2025
+
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post Receipt", 'OnBeforeTransferOrderPostReceipt', '', true, true)]
     local procedure RunOnBeforeTransferOrderPostReceipt(var TransferHeader: Record "Transfer Header"; var CommitIsSuppressed: Boolean; var ItemJnlPostLine: Codeunit "Item Jnl.-Post Line")

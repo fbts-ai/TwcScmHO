@@ -2565,7 +2565,7 @@ codeunit 50107 "Einvoice CU"
         Clear(IGST_lPer);
         Clear(CGST_lPer);
         Clear(SGST_lPer);
-
+        SLNo := 0;
         SalesLine.RESET;
         //SalesLine.SETRANGE("Document Type",SalesHeader."Document Type");
         SalesLine.SETRANGE("Document No.", SalesHeader."No.");
@@ -2641,8 +2641,10 @@ codeunit 50107 "Einvoice CU"
                 // ELSE
                 //     SLNo := SalesLine."Line No.";
 
+                SLNo += 1;
+
                 IF ItemJson = '' THEN
-                    ItemJson := '{"SlNo":"' + FORMAT(SalesLine."Line No." / 10000) + '","HsnCd":"' + SalesLine."HSN/SAC Code" + '","IsServc":"' + IsService + '"' +
+                    ItemJson := '{"SlNo":"' + FORMAT(SLNo) + '","HsnCd":"' + SalesLine."HSN/SAC Code" + '","IsServc":"' + IsService + '"' +
                   ',"Qty":' + DELCHR(FORMAT(SalesLine.Quantity), '=', ',') + ',"Unit": "' + FORMAT(UnitofMeasure."E UOM") +
                   '","UnitPrice":' + DELCHR(FORMAT(SalesLine."Unit Price"), '=', ',') +
                   ',"TotAmt":' + DELCHR(FORMAT(SalesLine.Amount), '=', ',') + ',"AssAmt":' + DELCHR(FORMAT(SalesLine.Amount), '=', ',') +
@@ -2651,7 +2653,7 @@ codeunit 50107 "Einvoice CU"
                   ',"SgstAmt":' + (DELCHR(FORMAT(SGST_lDec), '=', ',')) +
                    ',"TotItemVal":' + DELCHR(FORMAT(SalesLine.Amount + IGST_lDec + CGST_lDec + SGST_lDec), '=', ',') + '}'
                 ELSE
-                    ItemJson += ',{"SlNo":"' + FORMAT(SalesLine."Line No." / 10000) + '","HsnCd":"' + SalesLine."HSN/SAC Code" + '","IsServc":"' + IsService + '"' +
+                    ItemJson += ',{"SlNo":"' + FORMAT(SLNo) + '","HsnCd":"' + SalesLine."HSN/SAC Code" + '","IsServc":"' + IsService + '"' +
                   ',"Qty":' + DELCHR(FORMAT(SalesLine.Quantity), '=', ',') + ',"Unit": "' + FORMAT(UnitofMeasure."E UOM") +
                   '","UnitPrice":' + DELCHR(FORMAT(SalesLine."Unit Price"), '=', ',') +
                   ',"TotAmt":' + DELCHR(FORMAT(SalesLine.Amount), '=', ',') + ',"AssAmt":' + DELCHR(FORMAT(SalesLine.Amount), '=', ',') +

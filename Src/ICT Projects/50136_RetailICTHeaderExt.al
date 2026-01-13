@@ -12,7 +12,7 @@ tableextension 50136 RetailICTHeaderExt extends "LSC Retail ICT Header"
 
     keys
     {
-        key(SK1; "Source TableNo")
+        key(SK1; "Source TableNo", "Date Of Status", "Dist. Location From", "Time Of Status")
         { }
         // Add changes to keys here
     }

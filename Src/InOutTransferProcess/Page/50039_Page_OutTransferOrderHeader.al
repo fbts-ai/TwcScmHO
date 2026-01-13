@@ -1053,6 +1053,57 @@ page 50039 "Out Transfer Order"
 
                     end;
                 }
+
+
+                action("Price Update") //PT-FBTS 12-11-25
+                {
+                    ApplicationArea = all;
+                    Caption = 'Price Update';
+                    Image = Receipt;
+                    ShortCutKey = 'Shift+Ctrl+R';
+                    ToolTip = 'View or edit serial numbers and lot numbers that are assigned to the item on the document or journal line.';
+
+                    trigger OnAction()
+                    var
+                        Transferline: Record "Transfer Line";
+                        FADepreciationBook: Record "FA Depreciation Book";
+                        ForupdateFA2: Record "Fixed Asset";
+                        BookvalueGST: Decimal;
+                        GSTPer: Integer;
+                    begin
+                        Transferline.Reset();
+                        Transferline.SetRange("Document No.", Rec."No.");
+                        //Transferline.SetRange("Line No.", Rec."Line No.");
+                        if Transferline.FindSet() then begin
+                            repeat
+                                // Clear();
+                                BookvalueGST := 0;
+                                GSTPer := 0;
+                                FADepreciationBook.Reset();
+                                FADepreciationBook.SetRange("FA No.", Transferline.FixedAssetNo);
+                                if FADepreciationBook.FindFirst() then begin
+                                    FADepreciationBook.CalcFields("Book Value");
+                                    if ForupdateFA2.Get(Transferline.FixedAssetNo) then;
+                                    //Transferline.Amount := FADepreciationBook."Book Value";
+                                    Evaluate(GSTPer, ForupdateFA2."GST Group Code");
+                                    //rec.Amount := FADepreciationBook."Book Value";
+                                    BookvalueGST := Round(FADepreciationBook."Book Value" / (100 + GSTPer) * 100);
+                                    // Message('%1', BookvalueGST);
+                                    if GSTPer <> 0 then
+                                        Transferline.Validate("Transfer Price", BookvalueGST)
+                                    else begin
+                                        Transferline.Validate("Transfer Price", FADepreciationBook."Book Value"); //Aashish 27-09-2024
+                                                                                                                  //  Transferline."Transfer Price" := FADepreciationBook."Book Value"; //Aashish 27-09-2024 //Comment this Code 
+                                                                                                                  // Transferline.Description := ForupdateFA2.Description;
+                                                                                                                  // Transferline."Transfer Price" := BookvalueGST;
+                                                                                                                  // Transferline.Description := ForupdateFA2.Description;
+                                    end;
+                                    Transferline.Modify();
+                                END;
+                            until Transferline.Next() = 0;
+                        end;
+                    end;
+                }
                 /*
                 action(PostAndPrint)
                 {

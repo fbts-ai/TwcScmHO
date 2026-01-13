@@ -73,6 +73,11 @@ table 50007 WastageEntryHeader
             DataClassification = ToBeClassified;
             Caption = 'ApproverID';
         }
+        field(11; Exploed; Boolean)
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Exploed';
+        }
 
     }
 

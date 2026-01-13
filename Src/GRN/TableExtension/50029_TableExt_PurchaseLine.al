@@ -99,6 +99,10 @@ tableextension 50029 PurchaseLineExt extends "Purchase Line"
         {
             DataClassification = ToBeClassified;
         }
+        field(50012; "Converted Qty."; Decimal) //PT-FBTS 12-10-2025        
+        {
+
+        }
 
 
 

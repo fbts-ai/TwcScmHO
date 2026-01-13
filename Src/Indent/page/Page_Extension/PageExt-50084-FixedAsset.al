@@ -30,4 +30,15 @@ pageextension 50084 FixedAssetListExt extends "Fixed Asset List"
 
     var
         myInt: Integer;
+
+    trigger OnOpenPage()
+    var
+        myInt: Integer;
+    begin
+        Rec.FilterGroup(2); //PT-FBTS 12-012025
+        Rec.SetRange(Rec."Used To", false);
+        Rec.FilterGroup(0);
+        //PT-FBTS 12-012025
+    end;
+
 }

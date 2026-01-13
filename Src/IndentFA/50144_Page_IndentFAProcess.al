@@ -3,7 +3,7 @@ page 50144 "Indent FA Processing Page"
     PageType = List;
     Editable = false;
     ApplicationArea = All;
-    UsageCategory = Administration;
+    UsageCategory = History;
     SourceTable = IndentHeader;
     SourceTableView = where(Type = const("Fixed Asset"), Status = const(Released), "Created Transfer FA" = const(false));
     InsertAllowed = false;
@@ -399,10 +399,12 @@ page 50144 "Indent FA Processing Page"
         if IndentLine2.FindSet() then begin
             repeat
                 //Leftqty += IndentLine2.Quantity;
-                Leftqty += IndentLine2."FA Qty. to Ship";
+                Leftqty += IndentLine2."FA Qty. Shipped"
+            // Leftqty += IndentLine2."FA Qty. to Ship";
             until IndentLine2.Next() = 0;
         end;
-        if Leftqty = 0 then begin
+        if Leftqty <> 0 then begin
+            //if Leftqty = 0 then begin
             FAIndentHdr.Reset();
             FAIndentHdr.SetRange("No.", Rec."No.");
             if FAIndentHdr.FindFirst() then begin
@@ -557,9 +559,8 @@ page 50144 "Indent FA Processing Page"
                         if GSTPer <> 0 then//PT-FBTS-10-09-2025
                             transline.Validate("Transfer Price", BookvalueGST)
                         else
-                            transline."Transfer Price" := FADepreciationBook."Book Value";
-                        //PT-FBTS-10-09-2025
-                        //transline.Validate("Transfer Price", FADepreciationBook."Book Value");//PT-FBTS -19-06-2-24 ////oldcode i commentPT-FBTS-10-09-2025
+                            transline.Validate("Transfer Price", FADepreciationBook."Book Value");//Aashish 27-09-2025
+                        //  transline."Transfer Price" := FADepreciationBook."Book Value";  //Aashish 27-09-2025 //Comment Code 
                         transline.Modify();
                     end;
                 end;
