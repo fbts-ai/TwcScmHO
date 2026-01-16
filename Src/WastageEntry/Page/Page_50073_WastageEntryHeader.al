@@ -92,7 +92,8 @@ page 50073 WastageEntryCard
                 ApplicationArea = all;
                 SubPageLink = "DocumentNo." = field("No.");
                 UpdatePropagation = Both;
-                Editable = IsWastageLinesEditable;
+                //Editable = IsWastageLinesEditable;
+                Editable = EditBool; //PT-FBTS
                 Enabled = IsWastageLinesEditable;
             }
         }
@@ -215,7 +216,7 @@ page 50073 WastageEntryCard
                     TempWastageEntryLine.SetRange("DocumentNo.", Rec."No.");
                     TempWastageEntryLine.SetFilter("Reason Code", '=%1', '');
                     IF TempWastageEntryLine.FindFirst() then begin
-                        Error('Reason code must have value in Line No. %1', TempWastageEntryLine."LineNo.");
+                        Error('Please select Reason code for. %1..%2', TempWastageEntryLine."Item Code", TempWastageEntryLine.Description);//Aashish
                     end;
 
                     TempWastageEntryLine.Reset();
@@ -608,7 +609,64 @@ page 50073 WastageEntryCard
                     ItmJounNew: Record 83;
                     ItmJounNew1: Record 83;
                     Reserveration: Record "Reservation Entry";
+                    /////////////////////////////////
+                    BOMCompRec: Record "BOM Component";
+                    WastQty: Decimal;
+                    ItemRec: Record Item;
+                    WastageEntryLine: Record WastageEntryLine;
+                    WastageEntryHEADER: Record WastageEntryHeader;
+                    WastageEntryLine1: Record WastageEntryLine;
+                    WastageEntryLine2: Record WastageEntryLine;
+                    WastageEntryLine3: Record WastageEntryLine;
+                    WastageEntryLine4: Record WastageEntryLine;
+                    BomWastageCheck: Record "BOm Wastage Check";
+                    BomWastageCheck1: Record "BOm Wastage Check";
+                    BomWastageCheck2: Record "BOm Wastage Check";
+                    //LineNo: Integer;
+                    LineNo2: Integer;
+                    LineNo_l: Integer;
+                    I_Uom: Record "Item Unit of Measure";
+                    QtyPer: Decimal;
+                    reason: code[20];
+                    ////////////////////////////////////////////////API Var
+                    // StockCheckWastageLine1: Record wastageStockCheck;
+                    LSCBarcodes: Record "LSC Barcodes";
+                    LineNo1: Integer;
+                    ItemQty: Decimal;
+                    BlisterHeader_lNos: Code[20];
+                    Transfer1_lRec: Record "Transfer Line";
+                    POQty: Decimal;
+                    TransferLine3: Record WastageEntryLine;
+                    TransferLine1: Record WastageEntryLine;
+                    TransferLine: Record WastageEntryLine;
+                    TransferLine4: Record WastageEntryLine;
+                    Item: Record item;
+                    //TaxCaseExecution: Codeunit "Use Case Execution";
+                    ItemLedgerEntry: Record "Item Ledger Entry";
+                    TransferShipmentLine: Record "Transfer Shipment Line";
                 begin
+
+                    CheckPostingDateAllowed(Rec);//PT-FBTS
+                    TestField(Status, Status::Open);//Aashish 04-09-2025
+                    TempWastageEntryLine.Reset();
+                    TempWastageEntryLine.SetRange("DocumentNo.", "No.");
+                    if not TempWastageEntryLine.FindFirst() then
+                        Error('Please Create Wastage line');
+                    TempWastageEntryLine.Reset();
+                    TempWastageEntryLine.SetRange("DocumentNo.", "No.");
+                    if TempWastageEntryLine.FindSet() then
+                        repeat
+                            if TempWastageEntryLine.Quantity = 0 then
+                                Error('Please create wastage lines with Quantity greater than zero.');
+                        until TempWastageEntryLine.Next() = 0;
+                    WastageEntryLine.Reset();
+                    WastageEntryLine.SetRange("DocumentNo.", Rec."No.");
+                    WastageEntryLine.SetRange("Reason Code", '');
+                    if WastageEntryLine.FindFirst() then begin
+                        Error('Please enter the reson code %1', WastageEntryLine."Item Code");
+                    end;
+
+
                     CheckPostingDateAllowed(Rec);//PT-FBTS-16-09-2025
                     TestField(Status, Status::Open);//PT-FBTs 16-09-2025
 
@@ -685,14 +743,125 @@ page 50073 WastageEntryCard
                     TodaysSales := 0;
                     totalPercentageValue := 0;
                     IF Confirm('Do you want to submit this order for approval?', true) then begin
+
+                        WastageEntryLine.Reset(); ///PT-FBTS 16-01-26 Start
+                        WastageEntryLine.SetRange("DocumentNo.", Rec."No.");
+                        if WastageEntryLine.FindFirst() then
+                            repeat
+                                ItemRec.Get(WastageEntryLine."Item Code");
+                                ItemRec.CalcFields("Assembly BOM");
+                                BOMCompRec.Reset();
+                                BOMCompRec.SetRange("Parent Item No.", WastageEntryLine."Item Code");
+                                if BOMCompRec.FindSet() then
+                                    repeat
+                                        I_Uom.Reset();
+                                        I_Uom.SetRange("Item No.", BOMCompRec."No.");
+                                        I_Uom.SetRange(Code, BOMCompRec."Unit of Measure Code");
+                                        if I_Uom.FindFirst() then
+                                            QtyPer := I_Uom."Qty. per Unit of Measure";
+                                        //  Message('unitper%1', QtyPer);
+                                        // WastageEntryLine1.Reset();
+                                        // WastageEntryLine1.SetRange("DocumentNo.", Rec."DocumentNo.");
+                                        // WastageEntryLine1.SetRange("Item Code", BOMCompRec."No.");
+                                        // IF Not WastageEntryLine1.FindFirst() then begin
+                                        if ItemRec."Assembly BOM" then begin
+                                            LineNo += 10000;
+                                            BomWastageCheck.Init();
+                                            BomWastageCheck."Document No." := WastageEntryLine."DocumentNo.";
+                                            BomWastageCheck."LineNo." := LineNo;
+                                            BomWastageCheck.Validate("Item Code", BOMCompRec."No.");
+                                            BomWastageCheck.Validate("Parent Item No.", BOMCompRec."Parent Item No.");
+                                            BomWastageCheck.Validate(Description, BOMCompRec.Description);
+                                            BomWastageCheck.Validate(Date, Rec."Posting date");
+                                            BomWastageCheck.Validate(UOM, BOMCompRec."Unit of Measure Code");
+                                            BomWastageCheck.Validate(Reason, WastageEntryLine."Reason Code");
+                                            BomWastageCheck.Validate("Sale qty.", (BOMCompRec."Quantity per" * I_Uom."Qty. per Unit of Measure" * WastageEntryLine.Quantity));
+
+                                            BomWastageCheck.Insert();
+                                        END;
+                                    until BOMCompRec.Next() = 0;
+                                WastageEntryLine.Validate(UnitPrice, 0);
+                                if ItemRec."Assembly BOM" then begin
+                                    // WastageEntryLine.CalcSums(Quantity);
+                                    WastageEntryLine.Delete();
+                                end;
+                            until WastageEntryLine.Next() = 0;
+                        /////////////////////////////////////////////// BOM  to Bom wastage Insertdata
+                        Clear(LineNo_l);
+                        Clear(LineNo2);
+                        BomWastageCheck1.Reset();
+                        //BomWastageCheck1.SetCurrentKey("item Code");
+                        BomWastageCheck1.SetRange("Document No.", Rec."No.");
+                        IF BomWastageCheck1.FindFirst() then
+                            repeat
+                                Clear(WastQty);
+                                // WastageEntryLine2.Reset();
+                                // WastageEntryLine2.SetCurrentKey("Item Code");
+                                // WastageEntryLine2.SetRange("DocumentNo.", Rec."No.");
+                                // WastageEntryLine2.SetRange("Item Code", BomWastageCheck1."item Code");
+                                // IF WastageEntryLine2.Findset() then BEGIN
+                                WastageEntryLine3.Reset();
+                                WastageEntryLine3.SetRange("DocumentNo.", Rec."No.");
+                                IF WastageEntryLine3.FindLast() then
+                                    LineNo_l := WastageEntryLine3."LineNo." + 10000
+                                Else
+                                    LineNo_l := 10000;
+                                // IF ItemCode <> BomWastageCheck1."Item Code" Then begin
+                                //     ItemCode := BomWastageCheck1."Item Code";
+                                BomWastageCheck2.Reset();
+                                BomWastageCheck2.SetRange("Document No.", Rec."No.");
+                                //BomWastageCheck2.SetRange("item Code", ItemCode);
+                                //BomWastageCheck2.CalcSums("Sale qty.");
+                                WastageEntryLine1.Init();
+                                WastageEntryLine1."DocumentNo." := Rec."No.";
+                                WastageEntryLine1."LineNo." := LineNo_l;
+                                WastageEntryLine1.Validate("Item Code", BomWastageCheck1."item Code");
+                                WastageEntryLine1.Validate("Parent Item No.", BomWastageCheck1."Parent Item No.");
+                                WastageEntryLine1.Validate(Description, BomWastageCheck1.Description);
+                                WastageEntryLine1.Validate("Location Code", rec."Location Code");
+                                WastageEntryLine1.Validate("Posting date", BomWastageCheck1.Date);
+                                WastageEntryLine1.Validate(Quantity, BomWastageCheck1."Sale qty.");
+                                WastageEntryLine1.Validate("Reason Code", BomWastageCheck1.Reason);
+                                WastageEntryLine1."To Data" := true;
+                                WastageEntryLine1.Insert();
+                                DocNo := WastageEntryLine1."DocumentNo.";
+
+
+                            until BomWastageCheck1.Next() = 0;
+
+                        Rec.Exploed := true;
+
+
+                        if Rec.Exploed then
+                            BomExpoledEdit := true
+                        else
+                            BomExpoledEdit := false;
+                        ///PT-FBTS 16-01-26
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         IF Rec.Status = Rec.Status::Open then begin
-                            TempWastageEntryLineForlot.Reset(); //adding hear//PT-FBTS-16-9-25
-                            TempWastageEntryLineForlot.SetRange("DocumentNo.", Rec."No.");
-                            IF TempWastageEntryLineForlot.FindSet() then begin
-                                repeat
-                                    QTYvalidate(TempWastageEntryLineForlot, rec."Posting date")
-                                until TempWastageEntryLineForlot.Next() = 0
-                            end;//adding hear//PT-FBTS-16-9-25
+
                             totalWastageLine.Reset();
                             totalWastageLine.SetRange(totalWastageLine."DocumentNo.", rec."No.");
                             IF totalWastageLine.FindSet() then
@@ -738,6 +907,13 @@ page 50073 WastageEntryCard
                                 //start
                                 IF Confirm('Order is auto approved Are you sure to submit the Wastage Entry? You will not be able to modify after submitting.', true) then begin
                                     IF Rec.Status = Rec.Status::Approved then begin
+                                        TempWastageEntryLineForlot.Reset(); //adding hear//PT-FBTS-16-9-25
+                                        TempWastageEntryLineForlot.SetRange("DocumentNo.", Rec."No.");
+                                        IF TempWastageEntryLineForlot.FindSet() then begin
+                                            repeat
+                                                QTYvalidate(TempWastageEntryLineForlot, rec."Posting date")
+                                            until TempWastageEntryLineForlot.Next() = 0
+                                        end;//adding hear//PT-FBTS-16-9-25
                                         InventSetup.Get();
                                         ItemJournalTemplate := InventSetup.WastageEntryTemplateName;
                                         ItemJournalBatchName := InventSetup.WastageEntryBatchName;
@@ -763,6 +939,7 @@ page 50073 WastageEntryCard
 
                                         TempWastageEntryLine.Reset();
                                         TempWastageEntryLine.SetRange("DocumentNo.", Rec."No.");
+                                        TempWastageEntryLine.SetFilter(Quantity, '<>%1', 0);//Aashish
                                         IF TempWastageEntryLine.FindSet() then
                                             repeat
 
@@ -821,6 +998,8 @@ page 50073 WastageEntryCard
 
 
                                                 TempItemJnlLine."Reason Code" := TempWastageEntryLine."Reason Code";
+                                                TempItemJnlLine."W_Parent Item No." := TempWastageEntryLine."Parent Item No."; //PT-FBTS 22-12-25
+                                                TempItemJnlLine."W_Parent Item Descrption" := TempWastageEntryLine."Parent Item Descrption"; //PT-FBTS 22-12-25
                                                 //as we validation location code on item journal commenting this code
                                                 /*
                                                //Dimension
@@ -1027,7 +1206,9 @@ page 50073 WastageEntryCard
                                     end
                                     Else
                                         Error('status must be Approve before posting');
-                                end;
+                                end
+                                else //PT-FBTS 12-22-25
+                                    exit; //PT-FBTS 12-22-25
 
 
 
@@ -1051,7 +1232,9 @@ page 50073 WastageEntryCard
 
                         end else
                             Error('Order Status must be open');
-                    end;
+                    end
+                    else //PT-FBTS-16-01-25
+                        exit;//PT-FBTS-16-01-25
                 end;
 
 
@@ -1095,7 +1278,6 @@ page 50073 WastageEntryCard
 
                     end;
                 end;
-
             }
 
         }
@@ -1127,6 +1309,10 @@ page 50073 WastageEntryCard
         End
         Else
             CurrPage.Editable(False);
+        if Rec.Exploed then //PT-FBTS-16-01-25
+            EditBool := false
+        else
+            EditBool := true;
     end;
 
     trigger OnAfterGetCurrRecord()
@@ -1136,6 +1322,10 @@ page 50073 WastageEntryCard
         End
         Else
             CurrPage.Editable(False);
+        if Rec.Exploed then //PT-FBTS-16-01-25
+            EditBool := false
+        else
+            EditBool := true;
     end;
 
     trigger OnModifyRecord(): Boolean
@@ -1332,6 +1522,8 @@ page 50073 WastageEntryCard
         ReservationEntry: Record "Reservation Entry";
         Entry: Integer;
         NoSeriesManagement: Codeunit NoSeriesManagement;
+        EditBool: Boolean;
+        BomExpoledEdit: Boolean;
 
 
 

@@ -215,6 +215,8 @@ codeunit 50004 AllSCMCustomization
     begin
         NewItemLedgEntry.BrandName := ItemJournalLine.BrandName;
         NewItemLedgEntry.ManufacturingDate := ItemJournalLine.ManufacturingDate;
+        NewItemLedgEntry."W_Parent Item No." := ItemJournalLine."W_Parent Item No.";//PT-FBTS 22-12-25
+        NewItemLedgEntry."W_Parent Item Descrption" := ItemJournalLine."W_Parent Item Descrption";//PT-FBTS 22-12-25
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Create Reserv. Entry", 'OnCreateReservEntryExtraFields', '', true, true)]
@@ -3496,7 +3498,7 @@ var LotNo: Code[20]; var qty: Decimal; var qty_base: Decimal; var qtyshipbase: D
 
         PurchOrderHeader.Validate("Location Code", BlanketOrderPurchHeader."Sub-Location");
         PurchOrderHeader.Modify();
-    end; //PT-FBTS-12-01-2025
+    end;
 
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post Receipt", 'OnBeforeTransferOrderPostReceipt', '', true, true)]

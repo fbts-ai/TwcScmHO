@@ -63,6 +63,14 @@ tableextension 50018 ItemJnlLineExt extends "Item Journal Line"
             DataClassification = ToBeClassified;
             //OptionMembers = Open,"Sent for Approval",Rejected,Approved;
         }
+        field(50225; "W_Parent Item No."; code[20]) //PT-FBTS-22-12-2025
+        {
+
+        }
+        field(50226; "W_Parent Item Descrption"; code[100])
+        {
+
+        }//PT-FBTS-22-12-2025
         //AJ_22012024
         //TodayQuarantine
         //AJ_ALLE_17012023

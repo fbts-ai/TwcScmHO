@@ -27,8 +27,21 @@ page 50074 "WastageEntrySubform"
                         TempILE: Record "Item Ledger Entry";
                         qty: Decimal;
                         TempWastageHeader: Record WastageEntryHeader;
-
+                        SKU: Record "Stockkeeping Unit"; //PT-FBTS 16-01-25
                     begin
+                        TempWastageHeader.Get(rec."DocumentNo.");
+
+                        SKU.Reset();
+                        SKU.SetRange("Item No.", Rec."Item Code");
+                        SKU.SetRange("Location Code", TempWastageHeader."Location Code");
+                        SKU.SetRange(WastageItem, true);
+
+                        if not SKU.FindFirst() then
+                            Error(
+                                'Item %1 is not available for Location %2. Select item from lookup only.',
+                                rec."Item Code",
+                                TempWastageHeader."Location Code"
+                            );
                         TempWastageHeader.Reset();
                         TempWastageHeader.SetRange("No.", Rec."DocumentNo.");
                         IF TempWastageHeader.FindFirst() Then;
@@ -44,46 +57,65 @@ page 50074 "WastageEntrySubform"
 
                     end;
 
-                    trigger OnLookup(var Text: Text): Boolean
+                    // trigger OnLookup(var Text: Text): Boolean
+                    // var
+                    //     TempItem: Record "Item";
+                    //     tempIndentMapping: Record "Indent Mapping";
+                    //     TempWastageEntrySubform: Record WastageEntryHeader;
+                    //     TempWastageHeader: Record WastageEntryHeader;
+
+                    // begin
+                    //     TempWastageEntrySubform.Reset();
+                    //     TempWastageEntrySubform.SetRange("No.", Rec."DocumentNo.");
+                    //     IF TempWastageEntrySubform.FindFirst() then;
+                    //     TempItem.Reset();
+                    //     TempItem.SetFilter(TempItem."No.", '<>%1', '');
+                    //     IF TempItem.FindSet() then
+                    //         repeat
+                    //             tempIndentMapping.reset();
+                    //             tempIndentMapping.SetFilter("Item No.", '=%1', TempItem."No.");
+                    //             IF tempIndentMapping.FindSet() then
+                    //                 repeat
+                    //                     IF ((tempIndentMapping."Location Code" = TempWastageEntrySubform."Location Code")
+                    //                     or (tempIndentMapping."Source Location No." = TempWastageEntrySubform."Location Code")) then
+                    //                         TempItem.Mark(true);
+
+                    //                 until tempIndentMapping.Next() = 0;
+
+                    //         Until TempItem.Next() = 0;
+
+                    //     TempItem.MarkedOnly(true);
+
+                    //     IF PAGE.RUNMODAL(0, TempItem) = ACTION::LookupOK THEN begin
+                    //         Rec."Item Code" := TempItem."No.";
+                    //         Rec.Validate(Rec."Item Code");
+
+                    //     end;
+                    //     TempWastageHeader.Reset();
+                    //     TempWastageHeader.SetRange("No.", Rec."DocumentNo.");
+                    //     IF TempWastageHeader.FindFirst() Then;
+                    //     rec."Location Code" := TempWastageHeader."Location Code";//ALLE_NICK_11/1/23_LotFix
+                    // End;
+
+                    trigger OnLookup(var Text: Text): Boolean //PT-FBTS 16-01-26
                     var
-                        TempItem: Record "Item";
-                        tempIndentMapping: Record "Indent Mapping";
-                        TempWastageEntrySubform: Record WastageEntryHeader;
-                        TempWastageHeader: Record WastageEntryHeader;
-
+                        SKU: Record "Stockkeeping Unit";
+                        WastageHeader: Record WastageEntryHeader;
                     begin
-                        TempWastageEntrySubform.Reset();
-                        TempWastageEntrySubform.SetRange("No.", Rec."DocumentNo.");
-                        IF TempWastageEntrySubform.FindFirst() then;
-                        TempItem.Reset();
-                        TempItem.SetFilter(TempItem."No.", '<>%1', '');
-                        IF TempItem.FindSet() then
-                            repeat
-                                tempIndentMapping.reset();
-                                tempIndentMapping.SetFilter("Item No.", '=%1', TempItem."No.");
-                                IF tempIndentMapping.FindSet() then
-                                    repeat
-                                        IF ((tempIndentMapping."Location Code" = TempWastageEntrySubform."Location Code")
-                                        or (tempIndentMapping."Source Location No." = TempWastageEntrySubform."Location Code")) then
-                                            TempItem.Mark(true);
-
-                                    until tempIndentMapping.Next() = 0;
-
-                            Until TempItem.Next() = 0;
-
-                        TempItem.MarkedOnly(true);
-
-                        IF PAGE.RUNMODAL(0, TempItem) = ACTION::LookupOK THEN begin
-                            Rec."Item Code" := TempItem."No.";
-                            Rec.Validate(Rec."Item Code");
-
+                        WastageHeader.Reset();
+                        WastageHeader.SetRange("No.", Rec."DocumentNo.");
+                        if not WastageHeader.FindFirst() then
+                            exit(false);
+                        SKU.Reset();
+                        SKU.SetRange("Location Code", WastageHeader."Location Code");
+                        SKU.SetRange(WastageItem, true);
+                        SKU.SetFilter("Item No.", '<>%1', '');
+                        if PAGE.RunModal(PAGE::"Stockkeeping Unit List", SKU) = Action::LookupOK then begin
+                            Rec.Validate("Item Code", SKU."Item No.");
+                            //exit(true);
                         end;
-                        TempWastageHeader.Reset();
-                        TempWastageHeader.SetRange("No.", Rec."DocumentNo.");
-                        IF TempWastageHeader.FindFirst() Then;
-                        rec."Location Code" := TempWastageHeader."Location Code";//ALLE_NICK_11/1/23_LotFix
-                    End;
-
+                        //exit(true);
+                    end;
 
 
                 }

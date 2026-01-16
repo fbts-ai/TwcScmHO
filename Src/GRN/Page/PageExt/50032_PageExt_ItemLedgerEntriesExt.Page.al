@@ -2,6 +2,13 @@ pageextension 50032 ItemLedgerEntriesExt extends "Item Ledger Entries"
 {
     layout
     {
+        addafter("Item No.")
+        {
+            field("W_Parent Item No."; Rec."W_Parent Item No.") //PT-FBTS-16-01-26
+            { ApplicationArea = all; }
+            field("W_Parent Item Descrption"; Rec."W_Parent Item Descrption")  //PT-FBTS-16-01-26
+            { ApplicationArea = all; }
+        }
         addafter("Lot No.")
         {
             field(BrandName; Rec.BrandName)

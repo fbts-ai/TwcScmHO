@@ -38,6 +38,15 @@ tableextension 50027 ItemLedegrEntryExt extends "Item Ledger Entry"
         {
             DataClassification = ToBeClassified;
         }
+        field(50112; "W_Parent Item No."; code[20]) //PT-FBTS-22-12-2025
+        {
+
+        }
+        field(50113; "W_Parent Item Descrption"; code[100])
+        {
+
+        }//PT-FBTS-22-12-2025
+
         //TodayQuarantine //AJ_ALLE_22012024
         //AJ_ALLE_17012023
     }

@@ -66,6 +66,16 @@ page 50072 "PostedWastageEntrySubform"
                 {
                     TableRelation = "Reason Code";
                 }
+                field("Parent Item No."; Rec."Parent Item No.")
+                {
+                    ApplicationArea = all;
+                    //Visible = false;
+                }
+                field("Parent Item Descrption"; Rec."Parent Item Descrption")
+                {
+                    ApplicationArea = all;
+                    //Visible = false;
+                }
 
 
 

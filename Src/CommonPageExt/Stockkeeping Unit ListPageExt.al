@@ -21,6 +21,10 @@ pageextension 50148 StockkeepingLists extends "Stockkeeping Unit List" //PT-FBTS
             {
                 ApplicationArea = all;
             }
+            field(WastageItem; Rec.WastageItem)
+            {
+                ApplicationArea = all;
+            }
         }
 
         addafter("Replenishment System")

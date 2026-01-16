@@ -12,7 +12,9 @@ pageextension 51115 ItemJournal extends "Item Journal"
             }
             field("Line No."; Rec."Line No.")
             { }
-        }
+
+
+        }//PT-FBTS-22-12-2025
     }
 
     actions
